@@ -17,6 +17,7 @@ package com.ashomok.lullabies.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,10 +25,14 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +44,7 @@ import android.widget.Toast;
 
 import com.ashomok.lullabies.MusicService;
 import com.ashomok.lullabies.R;
+import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.utils.LogHelper;
 import com.ashomok.lullabies.utils.MediaIDHelper;
 import com.ashomok.lullabies.utils.NetworkHelper;
@@ -60,29 +66,14 @@ public class MediaBrowserFragment extends Fragment {
 
     private static final String ARG_MEDIA_ID = "media_id";
 
-    private BrowseAdapter mBrowserAdapter;
     private String mMediaId;
     private MediaFragmentListener mMediaFragmentListener;
+    private FragmentActivity myContext;
     private View mErrorView;
     private TextView mErrorMessage;
-    private final BroadcastReceiver mConnectivityChangeReceiver = new BroadcastReceiver() {
-        private boolean oldOnline = false;
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // We don't care about network changes while this fragment is not associated
-            // with a media ID (for example, while it is being initialized)
-            if (mMediaId != null) {
-                boolean isOnline = NetworkHelper.isOnline(context);
-                if (isOnline != oldOnline) {
-                    oldOnline = isOnline;
-                    checkForUserVisibleErrors(false);
-                    if (isOnline) {
-                        mBrowserAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        }
-    };
+    ViewPager mPager;
+    LullabiesPagerAdapter mBrowserAdapter;
+
 
     // Receive callbacks from the MediaController. Here we update our state such as which queue
     // is being shown, the current title and description and the PlaybackState.
@@ -141,6 +132,7 @@ public class MediaBrowserFragment extends Fragment {
         // If used on an activity that doesn't implement MediaFragmentListener, it
         // will throw an exception as expected:
         mMediaFragmentListener = (MediaFragmentListener) activity;
+        myContext=(FragmentActivity) activity;
     }
 
     @Override
@@ -152,18 +144,16 @@ public class MediaBrowserFragment extends Fragment {
         mErrorView = rootView.findViewById(R.id.playback_error);
         mErrorMessage = (TextView) mErrorView.findViewById(R.id.error_message);
 
-        mBrowserAdapter = new BrowseAdapter(getActivity());
 
-        ListView listView = (ListView) rootView.findViewById(R.id.list_view);
-        listView.setAdapter(mBrowserAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                checkForUserVisibleErrors(false);
-                MediaBrowserCompat.MediaItem item = mBrowserAdapter.getItem(position);
-                mMediaFragmentListener.onMediaItemSelected(item);
-            }
-        });
+        //init pager
+        mPager = (ViewPager) rootView.findViewById(R.id.pager);
+        mBrowserAdapter = new LullabiesPagerAdapter(
+                myContext.getSupportFragmentManager());
+        mPager.setAdapter(mBrowserAdapter);
+        CircleView circleView = (CircleView) rootView.findViewById(R.id.circle_view);
+        circleView.setColorAccent(getResources().getColor(R.color.bt_accent));
+        circleView.setColorBase(getResources().getColor(R.color.cardview_dark_background));
+        circleView.setViewPager(mPager);
 
         return rootView;
     }
@@ -181,10 +171,6 @@ public class MediaBrowserFragment extends Fragment {
         if (mediaBrowser.isConnected()) {
             onConnected();
         }
-
-        // Registers BroadcastReceiver to track network connection changes.
-        this.getActivity().registerReceiver(mConnectivityChangeReceiver,
-            new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
@@ -198,7 +184,6 @@ public class MediaBrowserFragment extends Fragment {
         if (controller != null) {
             controller.unregisterCallback(mMediaControllerCallback);
         }
-        this.getActivity().unregisterReceiver(mConnectivityChangeReceiver);
     }
 
     @Override
