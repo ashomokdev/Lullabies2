@@ -214,7 +214,6 @@ public class MediaNotificationManager extends BroadcastReceiver {
     private PendingIntent createContentIntent(MediaDescriptionCompat description) {
         Intent openUI = new Intent(mService, MusicPlayerActivity.class);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        openUI.putExtra(MusicPlayerActivity.EXTRA_START_FULLSCREEN, true);
         if (description != null) {
             openUI.putExtra(MusicPlayerActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION, description);
         }

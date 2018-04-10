@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/android-UniversalMusicPlayer-master.iml" filepath="$PROJECT_DIR$/android-UniversalMusicPlayer-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lullabies2.iml" filepath="$PROJECT_DIR$/Lullabies2.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
     </modules>
   </component>

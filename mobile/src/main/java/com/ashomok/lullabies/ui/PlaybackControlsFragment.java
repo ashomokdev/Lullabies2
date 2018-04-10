@@ -85,20 +85,6 @@ public class PlaybackControlsFragment extends Fragment {
         mSubtitle = (TextView) rootView.findViewById(R.id.artist);
         mExtraInfo = (TextView) rootView.findViewById(R.id.extra_info);
         mAlbumArt = (ImageView) rootView.findViewById(R.id.album_art);
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FullScreenPlayerActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                MediaControllerCompat controller = MediaControllerCompat.getMediaController(getActivity());
-                MediaMetadataCompat metadata = controller.getMetadata();
-                if (metadata != null) {
-                    intent.putExtra(MusicPlayerActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION,
-                        metadata.getDescription());
-                }
-                startActivity(intent);
-            }
-        });
         return rootView;
     }
 
