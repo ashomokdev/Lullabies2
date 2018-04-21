@@ -31,8 +31,6 @@ public class MediaIDHelper {
 
     // Media IDs used on browseable items of MediaBrowser
     public static final String MEDIA_ID_EMPTY_ROOT = "__EMPTY_ROOT__";
-    public static final String MEDIA_ID_ROOT = "__ROOT__";
-    public static final String MEDIA_ID_MUSICS_BY_GENRE = "__BY_GENRE__";
     public static final String MEDIA_ID_MUSICS_BY_SEARCH = "__BY_SEARCH__";
 
     private static final char CATEGORY_SEPARATOR = '/';
@@ -124,18 +122,6 @@ public class MediaIDHelper {
 
     public static boolean isBrowseable(@NonNull String mediaID) {
         return mediaID.indexOf(LEAF_SEPARATOR) < 0;
-    }
-
-    public static String getParentMediaID(@NonNull String mediaID) {
-        String[] hierarchy = getHierarchy(mediaID);
-        if (!isBrowseable(mediaID)) {
-            return createMediaID(null, hierarchy);
-        }
-        if (hierarchy.length <= 1) {
-            return MEDIA_ID_ROOT;
-        }
-        String[] parentHierarchy = Arrays.copyOf(hierarchy, hierarchy.length-1);
-        return createMediaID(null, parentHierarchy);
     }
 
     /**

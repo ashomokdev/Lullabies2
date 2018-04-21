@@ -16,6 +16,7 @@
 
 package com.ashomok.lullabies.model;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import android.os.AsyncTask;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
+import android.util.Log;
 
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.utils.LogHelper;
@@ -68,8 +70,21 @@ public class MusicProvider {
     }
 
     public MusicProvider() {
-        this(new RemoteJSONSource());
+        SimpleMusicProviderSource source = new SimpleMusicProviderSource();
+        MusicSource musicSource = new MusicSource();
+        ArrayList<TrackData> musicItems = musicSource.getMusicSource();
+        for (TrackData item : musicItems) {
+            source.add(item);
+        }
+
+        mSource = source;
+        mMusicListByGenre = new ConcurrentHashMap<>();
+        mMusicListById = new ConcurrentHashMap<>();
+        mFavoriteTracks = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+
+        Log.d(TAG, "musicProvider created");
     }
+
     public MusicProvider(MusicProviderSource source) {
         mSource = source;
         mMusicListByGenre = new ConcurrentHashMap<>();
@@ -293,23 +308,23 @@ public class MusicProvider {
             return mediaItems;
         }
 
-        if (MEDIA_ID_ROOT.equals(mediaId)) {
-            mediaItems.add(createBrowsableMediaItemForRoot(resources));
-
-        } else if (MEDIA_ID_MUSICS_BY_GENRE.equals(mediaId)) {
+//        if (MEDIA_ID_ROOT.equals(mediaId)) {
+//            mediaItems.add(createBrowsableMediaItemForRoot(resources));
+//
+//        } else if (MEDIA_ID_MUSICS_BY_GENRE.equals(mediaId)) {
             for (String genre : getGenres()) {
                 mediaItems.add(createBrowsableMediaItemForGenre(genre, resources));
             }
 
-        } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_GENRE)) {
-            String genre = MediaIDHelper.getHierarchy(mediaId)[1];
-            for (MediaMetadataCompat metadata : getMusicsByGenre(genre)) {
-                mediaItems.add(createMediaItem(metadata));
-            }
-
-        } else {
-            LogHelper.w(TAG, "Skipping unmatched mediaId: ", mediaId);
-        }
+//        } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_GENRE)) {
+//            String genre = MediaIDHelper.getHierarchy(mediaId)[1];
+//            for (MediaMetadataCompat metadata : getMusicsByGenre(genre)) {
+//                mediaItems.add(createMediaItem(metadata));
+//            }
+//
+//        } else {
+//            LogHelper.w(TAG, "Skipping unmatched mediaId: ", mediaId);
+//        }
         return mediaItems;
     }
 
@@ -318,8 +333,8 @@ public class MusicProvider {
                 .setMediaId(MEDIA_ID_MUSICS_BY_GENRE)
                 .setTitle(resources.getString(R.string.browse_genres))
                 .setSubtitle(resources.getString(R.string.browse_genre_subtitle))
-                .setIconUri(Uri.parse("android.resource://" +
-                        "com.example.android.uamp/drawable/ic_by_genre"))
+//                .setIconUri(Uri.parse("android.resource://" +
+//                        "com.ashomok.lullabies/drawable/ic_by_genre")) //todo
                 .build();
         return new MediaBrowserCompat.MediaItem(description,
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);

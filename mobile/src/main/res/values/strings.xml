@@ -53,6 +53,30 @@
     <string name="media_route_menu_title">Play on…</string>
     <string name="nav_header_username">Username</string>
 
+    <string name="lion">Lion</string>
+    <string name="koala">Koala</string>
+    <string name="giraffe">Giraffe</string>
+    <string name="crocodile">Crocodile</string>
+    <string name="elephant">Elephant</string>
+    <string name="whale">Whale</string>
+    <string name="chameleon">Chameleon</string>
+    <string name="turtle">Turtle</string>
+    <string name="monkey">Monkey</string>
+    <string name="lullaby_songs">Lullaby Songs</string>
+    <string name="default_queue_title">Default music</string>
+    <string name="penguin">Penguin</string>
+    <string name="alert_dialog_cancel">Cancel</string>
+    <string name="alert_dialog_exit">Exit</string>
+    <string name="exit_dialog_title">Do you want to exit?</string>
+    <string name="appID" translatable="false">ca-app-pub-5221781428763224~4451105598</string>
+    <string name="thank_you_for_your_support">Thank you for your support!</string>
+    <string name="times_app_was_used" translatable="false">times_app_was_used</string>
+    <string name="rate_app_dialog_title">Rate app</string>
+    <string name="support_us">Please support us with ★★★★★!</string>
+    <string name="later">Later</string>
+    <string name="never">Never</string>
+    <string name="ok">OK</string>
+
     <!-- Notificaiton Channel -->
     <string name="notification_channel">UAMP_Channel_ID</string>
     <string name="notification_channel_description">Channel ID for UAMP</string>

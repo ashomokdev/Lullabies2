@@ -150,6 +150,8 @@ public class MediaBrowserFragment extends Fragment {
         mBrowserAdapter = new LullabiesPagerAdapter(
                 myContext.getSupportFragmentManager());
         mPager.setAdapter(mBrowserAdapter);
+        mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
+        //todo set on click listener
         CircleView circleView = (CircleView) rootView.findViewById(R.id.circle_view);
         circleView.setColorAccent(getResources().getColor(R.color.bt_accent));
         circleView.setColorBase(getResources().getColor(R.color.cardview_dark_background));
@@ -302,6 +304,26 @@ public class MediaBrowserFragment extends Fragment {
     public interface MediaFragmentListener extends MediaBrowserProvider {
         void onMediaItemSelected(MediaBrowserCompat.MediaItem item);
         void setToolbarTitle(CharSequence title);
+    }
+
+    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
+        public final String TAG = LogHelper.makeLogTag(OnPageChangeListenerImpl.class);
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(final int position) {
+            Log.d(TAG, "page selected " + position);
+            checkForUserVisibleErrors(false);
+            MediaBrowserCompat.MediaItem item = mBrowserAdapter.getItem(position).getMediaItem();
+            mMediaFragmentListener.onMediaItemSelected(item);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
     }
 
 }

@@ -9,7 +9,7 @@ import android.support.v4.media.MediaBrowserCompat;
  */
 public class FragmentFactory {
 
-    public static Fragment newInstance(MediaBrowserCompat.MediaItem mediaItem) {
+    public static MusicFragment newInstance(MediaBrowserCompat.MediaItem mediaItem) {
 
         return MusicFragment.newInstance(mediaItem);
     }

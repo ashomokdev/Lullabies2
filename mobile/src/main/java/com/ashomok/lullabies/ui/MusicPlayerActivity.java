@@ -37,11 +37,11 @@ public class MusicPlayerActivity extends BaseActivity
         implements MediaBrowserFragment.MediaFragmentListener {
 
     private static final String TAG = LogHelper.makeLogTag(MusicPlayerActivity.class);
-    private static final String SAVED_MEDIA_ID="com.example.android.uamp.MEDIA_ID";
+    private static final String SAVED_MEDIA_ID="com.ashomok.lullabies.MEDIA_ID";
     private static final String FRAGMENT_TAG = "uamp_list_container";
 
     public static final String EXTRA_CURRENT_MEDIA_DESCRIPTION =
-        "com.example.android.uamp.CURRENT_MEDIA_DESCRIPTION";
+        "com.ashomok.lullabies.CURRENT_MEDIA_DESCRIPTION";
 
     private Bundle mVoiceSearchParams;
 

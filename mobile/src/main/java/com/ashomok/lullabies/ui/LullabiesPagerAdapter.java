@@ -13,7 +13,7 @@ import java.util.List;
 
 public class LullabiesPagerAdapter extends FragmentPagerAdapter {
 
-    private List<Fragment> myFragments = new ArrayList<>();
+    private List<MusicFragment> myFragments = new ArrayList<>();
 
     public final String TAG = LogHelper.makeLogTag(FragmentPagerAdapter.class);
 
@@ -27,7 +27,7 @@ public class LullabiesPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public MusicFragment getItem(int position) {
         return myFragments.get(position);
     }
 
