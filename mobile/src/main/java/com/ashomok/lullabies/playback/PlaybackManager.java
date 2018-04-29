@@ -227,7 +227,7 @@ public class PlaybackManager implements Playback.Callback {
         }
         // Suspends current state.
         int oldState = mPlayback.getState();
-        long pos = mPlayback.getCurrentStreamPosition();
+        int pos = mPlayback.getCurrentStreamPosition();
         String currentMediaId = mPlayback.getCurrentMediaId();
         mPlayback.stop(false);
         playback.setCallback(this);

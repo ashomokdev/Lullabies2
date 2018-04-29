@@ -66,7 +66,7 @@ public class MusicPlayerActivity extends BaseActivity
 
     @Override
     public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
-        LogHelper.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId());
+        LogHelper.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId()); //todo null pointer sometimes here
         if (item.isPlayable()) {
             MediaControllerCompat.getMediaController(MusicPlayerActivity.this).getTransportControls()
                     .playFromMediaId(item.getMediaId(), null);

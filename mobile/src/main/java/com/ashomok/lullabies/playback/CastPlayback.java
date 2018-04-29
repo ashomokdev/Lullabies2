@@ -57,7 +57,7 @@ public class CastPlayback implements Playback {
 
     /** Playback interface Callbacks */
     private Callback mCallback;
-    private long mCurrentPosition;
+    private int mCurrentPosition;
     private String mCurrentMediaId;
 
     public CastPlayback(MusicProvider musicProvider, Context context) {
@@ -90,7 +90,7 @@ public class CastPlayback implements Playback {
     }
 
     @Override
-    public long getCurrentStreamPosition() {
+    public int getCurrentStreamPosition() {
         if (!isConnected()) {
             return mCurrentPosition;
         }
@@ -136,7 +136,7 @@ public class CastPlayback implements Playback {
     }
 
     @Override
-    public void seekTo(long position) {
+    public void seekTo(int position) {
         if (mCurrentMediaId == null) {
             mCurrentPosition = position;
             return;

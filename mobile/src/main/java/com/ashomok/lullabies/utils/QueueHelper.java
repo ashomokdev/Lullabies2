@@ -29,6 +29,7 @@ import com.ashomok.lullabies.model.MusicProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_GENRE;
 import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_SEARCH;
 
 /**

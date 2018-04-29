@@ -63,7 +63,7 @@ public interface Playback {
     /**
      * @return pos if currently playing an item
      */
-    long getCurrentStreamPosition();
+    int getCurrentStreamPosition();
 
     /**
      * Queries the underlying stream and update the internal last known stream position.
@@ -74,7 +74,7 @@ public interface Playback {
 
     void pause();
 
-    void seekTo(long position);
+    void seekTo(int position);
 
     void setCurrentMediaId(String mediaId);
 

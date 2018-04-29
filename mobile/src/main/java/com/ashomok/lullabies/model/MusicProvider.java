@@ -131,6 +131,17 @@ public class MusicProvider {
     }
 
     /**
+     * Get music tracks of the given genre
+     *
+     */
+    public List<MediaMetadataCompat> getMusics() {
+        if (mCurrentState != State.INITIALIZED) {
+            return Collections.emptyList();
+        }
+        return mMusicListByGenre.get("Lullabies"); //todo refactor needed
+    }
+
+    /**
      * Very basic implementation of a search that filter music tracks with title containing
      * the given query.
      *
@@ -308,49 +319,55 @@ public class MusicProvider {
             return mediaItems;
         }
 
+        if (MEDIA_ID_ROOT.equals(mediaId)) {
+            for (MediaMetadataCompat metadata : getMusics()) {
+                mediaItems.add(createMediaItem(metadata));
+            }
+        }
 //        if (MEDIA_ID_ROOT.equals(mediaId)) {
 //            mediaItems.add(createBrowsableMediaItemForRoot(resources));
 //
 //        } else if (MEDIA_ID_MUSICS_BY_GENRE.equals(mediaId)) {
-            for (String genre : getGenres()) {
-                mediaItems.add(createBrowsableMediaItemForGenre(genre, resources));
-            }
-
+//            for (String genre : getGenres()) {
+//                mediaItems.add(createBrowsableMediaItemForGenre(genre, resources));
+//            }
+//
 //        } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_GENRE)) {
 //            String genre = MediaIDHelper.getHierarchy(mediaId)[1];
 //            for (MediaMetadataCompat metadata : getMusicsByGenre(genre)) {
 //                mediaItems.add(createMediaItem(metadata));
 //            }
 //
-//        } else {
-//            LogHelper.w(TAG, "Skipping unmatched mediaId: ", mediaId);
 //        }
+        else {
+            LogHelper.w(TAG, "Skipping unmatched mediaId: ", mediaId);
+        }
         return mediaItems;
     }
 
-    private MediaBrowserCompat.MediaItem createBrowsableMediaItemForRoot(Resources resources) {
-        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-                .setMediaId(MEDIA_ID_MUSICS_BY_GENRE)
-                .setTitle(resources.getString(R.string.browse_genres))
-                .setSubtitle(resources.getString(R.string.browse_genre_subtitle))
-//                .setIconUri(Uri.parse("android.resource://" +
-//                        "com.ashomok.lullabies/drawable/ic_by_genre")) //todo
-                .build();
-        return new MediaBrowserCompat.MediaItem(description,
-                MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
-    }
-
-    private MediaBrowserCompat.MediaItem createBrowsableMediaItemForGenre(String genre,
-                                                                    Resources resources) {
-        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-                .setMediaId(createMediaID(null, MEDIA_ID_MUSICS_BY_GENRE, genre))
-                .setTitle(genre)
-                .setSubtitle(resources.getString(
-                        R.string.browse_musics_by_genre_subtitle, genre))
-                .build();
-        return new MediaBrowserCompat.MediaItem(description,
-                MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
-    }
+//    private MediaBrowserCompat.MediaItem createBrowsableMediaItemForRoot(Resources resources) {
+//        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
+//                .setMediaId(MEDIA_ID_MUSICS_BY_GENRE)
+//                .setTitle(resources.getString(R.string.browse_genres))
+//                .setSubtitle(resources.getString(R.string.browse_genre_subtitle))
+////                .setIconUri(Uri.parse("android.resource://" +
+////                        "com.ashomok.lullabies/drawable/ic_by_genre")) //todo
+//                .build();
+//        return new MediaBrowserCompat.MediaItem(description,
+//                MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
+//    }
+//
+//    private MediaBrowserCompat.MediaItem createBrowsableMediaItemForGenre(String genre,
+//                                                                    Resources resources) {
+//        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
+//                .setMediaId(createMediaID(null, MEDIA_ID_MUSICS_BY_GENRE, genre))
+//                .setTitle(genre)
+//                .setSubtitle(resources.getString(
+//                        R.string.browse_musics_by_genre_subtitle, genre))
+//                .build();
+//        return new MediaBrowserCompat.MediaItem(description,
+//                MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
+//    }
 
     private MediaBrowserCompat.MediaItem createMediaItem(MediaMetadataCompat metadata) {
         // Since mediaMetadata fields are immutable, we need to create a copy, so we
