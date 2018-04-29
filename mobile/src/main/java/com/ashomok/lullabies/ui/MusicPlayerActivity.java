@@ -64,6 +64,7 @@ public class MusicPlayerActivity extends BaseActivity
         super.onSaveInstanceState(outState);
     }
 
+    //error when come back from toolbar
     @Override
     public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
         LogHelper.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId()); //todo null pointer sometimes here

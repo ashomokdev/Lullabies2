@@ -41,6 +41,8 @@ import static android.support.v4.media.session.MediaSessionCompat.QueueItem;
 /**
  * An implementation of Playback that talks to Cast.
  */
+
+//todo reduntant class
 public class CastPlayback implements Playback {
 
     private static final String TAG = LogHelper.makeLogTag(CastPlayback.class);
@@ -237,7 +239,7 @@ public class CastPlayback implements Playback {
         mediaMetadata.addImage(image);
 
         //noinspection ResourceType
-        return new MediaInfo.Builder(track.getString(MusicProviderSource.CUSTOM_METADATA_TRACK_SOURCE))
+        return new MediaInfo.Builder(track.getString(MusicProviderSource.CUSTOM_METADATA_TRACK_SOURCE)) //todo CUSTOM_METADATA_TRACK_SOURCE is int not string
                 .setContentType(MIME_TYPE_AUDIO_MPEG)
                 .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
                 .setMetadata(mediaMetadata)
