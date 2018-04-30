@@ -22,5 +22,6 @@ import java.util.Iterator;
 
 public interface MusicProviderSource {
     String CUSTOM_METADATA_TRACK_SOURCE = "__SOURCE__";
+    String CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID = "__IMAGE_DRAWABLE_ID__";
     Iterator<MediaMetadataCompat> iterator();
 }

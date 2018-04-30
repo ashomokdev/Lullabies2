@@ -16,17 +16,13 @@
 
 package com.ashomok.lullabies.model;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.util.Log;
 
-import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.utils.LogHelper;
 import com.ashomok.lullabies.utils.MediaIDHelper;
 
@@ -41,7 +37,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_GENRE;
 import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_ROOT;
-import static com.ashomok.lullabies.utils.MediaIDHelper.createMediaID;
 
 /**
  * Simple data provider for music tracks. The actual metadata source is delegated to a

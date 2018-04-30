@@ -15,8 +15,13 @@
  */
 package com.ashomok.lullabies.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
+
+import com.ashomok.lullabies.MyApplication;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -79,5 +84,41 @@ public class BitmapHelper {
                 is.close();
             }
         }
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    public static Bitmap fetchAndRescaleBitmap(int drawableId, int width, int height) {
+
+        Context context = MyApplication.getAppContext();
+        int scaleFactor = 0;
+        try {
+            scaleFactor = findScaleFactor(width, height, context, drawableId);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        Log.d(TAG, "Scaling bitmap from id " + drawableId + " by factor " + scaleFactor + " to support " +
+                width + "x" + height + "requested dimension");
+        return scaleBitmap(scaleFactor, context, drawableId);
+    }
+
+    private static int findScaleFactor(int targetW, int targetH, Context context, int drawableId) {
+        // Get the dimensions of the image
+        Drawable d = context.getResources().getDrawable(drawableId);
+        int actualH = d.getIntrinsicHeight();
+        int actualW = d.getIntrinsicWidth();
+
+        // Determine how much to scale down the image
+        return Math.min(actualW / targetW, actualH / targetH);
+    }
+
+    private static Bitmap scaleBitmap(int scaleFactor, Context context, int drawableId) {
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+
+        return BitmapFactory.decodeResource(context.getResources(), drawableId, bmOptions);
     }
 }

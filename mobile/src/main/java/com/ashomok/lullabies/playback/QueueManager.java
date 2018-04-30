@@ -18,6 +18,7 @@ package com.ashomok.lullabies.playback;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.media.MediaMetadataCompat;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.ashomok.lullabies.model.MusicProviderSource.CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID;
 
 /**
  * Simple data provider for queues. Keeps track of a current queue and a current index in the
@@ -194,26 +197,50 @@ public class QueueManager {
 
         // Set the proper album artwork on the media session, so it can be shown in the
         // locked screen and in other places.
-        if (metadata.getDescription().getIconBitmap() == null &&
-                metadata.getDescription().getIconUri() != null) {
-            String albumUri = metadata.getDescription().getIconUri().toString();
-            AlbumArtCache.getInstance().fetch(albumUri, new AlbumArtCache.FetchListener() {
-                @Override
-                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
-                    mMusicProvider.updateMusicArt(musicId, bitmap, icon);
+        if (metadata.getDescription().getIconBitmap() == null) {
+            if (metadata.getDescription().getIconUri() != null ||
+                    (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID) != 0) {
+                Uri iconUri = metadata.getDescription().getIconUri();
+                if (iconUri == null) {
+                    int image = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID);
+                    AlbumArtCache.getInstance().fetch(image, new AlbumArtCache.FetchDrawableListener() {
+                        @Override
+                        public void onFetched(int drawableID, Bitmap bitmap, Bitmap icon) {
+                            mMusicProvider.updateMusicArt(musicId, bitmap, icon);
 
-                    // If we are still playing the same music, notify the listeners:
-                    MediaSessionCompat.QueueItem currentMusic = getCurrentMusic();
-                    if (currentMusic == null) {
-                        return;
-                    }
-                    String currentPlayingId = MediaIDHelper.extractMusicIDFromMediaID(
-                            currentMusic.getDescription().getMediaId());
-                    if (musicId.equals(currentPlayingId)) {
-                        mListener.onMetadataChanged(mMusicProvider.getMusic(currentPlayingId));
-                    }
+                            // If we are still playing the same music, notify the listeners:
+                            MediaSessionCompat.QueueItem currentMusic = getCurrentMusic();
+                            if (currentMusic == null) {
+                                return;
+                            }
+                            String currentPlayingId = MediaIDHelper.extractMusicIDFromMediaID(
+                                    currentMusic.getDescription().getMediaId());
+                            if (musicId.equals(currentPlayingId)) {
+                                mListener.onMetadataChanged(mMusicProvider.getMusic(currentPlayingId));
+                            }
+                        }
+                    });
+                } else {
+                    String albumUri = iconUri.toString();
+                    AlbumArtCache.getInstance().fetch(albumUri, new AlbumArtCache.FetchUrlListener() {
+                        @Override
+                        public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
+                            mMusicProvider.updateMusicArt(musicId, bitmap, icon);
+
+                            // If we are still playing the same music, notify the listeners:
+                            MediaSessionCompat.QueueItem currentMusic = getCurrentMusic();
+                            if (currentMusic == null) {
+                                return;
+                            }
+                            String currentPlayingId = MediaIDHelper.extractMusicIDFromMediaID(
+                                    currentMusic.getDescription().getMediaId());
+                            if (musicId.equals(currentPlayingId)) {
+                                mListener.onMetadataChanged(mMusicProvider.getMusic(currentPlayingId));
+                            }
+                        }
+                    });
                 }
-            });
+            }
         }
     }
 

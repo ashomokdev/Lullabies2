@@ -145,7 +145,7 @@ public class PlaybackControlsFragment extends Fragment {
             if (art != null) {
                 mAlbumArt.setImageBitmap(art);
             } else {
-                cache.fetch(artUrl, new AlbumArtCache.FetchListener() {
+                cache.fetch(artUrl, new AlbumArtCache.FetchUrlListener() { //todo error may be here no url image - use drawable - add code
                             @Override
                             public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
                                 if (icon != null) {

@@ -2,6 +2,7 @@ package com.ashomok.lullabies.ui;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.media.MediaBrowserCompat;
 
 import com.ashomok.lullabies.utils.LogHelper;
@@ -9,7 +10,7 @@ import com.ashomok.lullabies.utils.LogHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LullabiesPagerAdapter extends FragmentPagerAdapter {
+public class LullabiesPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<MusicFragment> myFragments = new ArrayList<>();
 

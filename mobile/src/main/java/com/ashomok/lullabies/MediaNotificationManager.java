@@ -38,10 +38,13 @@ import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.ashomok.lullabies.ui.MusicPlayerActivity;
 import com.ashomok.lullabies.utils.LogHelper;
 import com.ashomok.lullabies.utils.ResourceHelper;
+
+import static com.ashomok.lullabies.model.MusicProviderSource.CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID;
 
 /**
  * Keeps track of a notification and updates it automatically for a given
@@ -268,10 +271,23 @@ public class MediaNotificationManager extends BroadcastReceiver {
         MediaDescriptionCompat description = mMetadata.getDescription();
 
         String fetchArtUrl = null;
+        int fetchArtDrawableID = 0;
         Bitmap art = null;
-        if (description.getIconUri() != null) {
-            // This sample assumes the iconUri will be a valid URL formatted String, but
-            // it can actually be any valid Android Uri formatted String.
+
+        if (description.getIconUri() == null) {
+            int drawableID = (int) mMetadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID);
+            if (drawableID != 0) {
+                // async fetch the album art icon
+                art = AlbumArtCache.getInstance().getBigImage(drawableID);
+                if (art == null) {
+                    fetchArtDrawableID = drawableID;
+                    // use a placeholder art while the art is being loaded
+                    art = BitmapFactory.decodeResource(mService.getResources(),
+                            R.drawable.ic_default_art);
+                }
+            }
+        } else {
+            // This sample assumes the iconUri will be a valid URL formatted String
             // async fetch the album art icon
             String artUrl = description.getIconUri().toString();
             art = AlbumArtCache.getInstance().getBigImage(artUrl);
@@ -321,7 +337,9 @@ public class MediaNotificationManager extends BroadcastReceiver {
         }
 
         setNotificationPlaybackState(notificationBuilder);
-        if (fetchArtUrl != null) {
+        if (fetchArtUrl == null && fetchArtDrawableID != 0) {
+            fetchBitmapFromDrawableIdAsync(fetchArtDrawableID, notificationBuilder);
+        } else if (fetchArtUrl != null) {
             fetchBitmapFromURLAsync(fetchArtUrl, notificationBuilder);
         }
 
@@ -382,7 +400,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
 
     private void fetchBitmapFromURLAsync(final String bitmapUrl,
                                          final NotificationCompat.Builder builder) {
-        AlbumArtCache.getInstance().fetch(bitmapUrl, new AlbumArtCache.FetchListener() {
+        AlbumArtCache.getInstance().fetch(bitmapUrl, new AlbumArtCache.FetchUrlListener() {
             @Override
             public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
                 if (mMetadata != null && mMetadata.getDescription().getIconUri() != null &&
@@ -391,6 +409,22 @@ public class MediaNotificationManager extends BroadcastReceiver {
                     LogHelper.d(TAG, "fetchBitmapFromURLAsync: set bitmap to ", artUrl);
                     builder.setLargeIcon(bitmap);
                     addActions(builder);
+                    mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+                }
+            }
+        });
+    }
+
+    private void fetchBitmapFromDrawableIdAsync(final int drawableID,
+                                                final NotificationCompat.Builder builder) {
+        AlbumArtCache.getInstance().fetch(drawableID, new AlbumArtCache.FetchDrawableListener() {
+            @Override
+            public void onFetched(int drawableId, Bitmap bigImage, Bitmap iconImage) {
+                if (mMetadata != null &&
+                        ((int) mMetadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID)) == drawableID) {
+                    // If the media is still the same, update the notification:
+                    LogHelper.d(TAG, "fetchBitmapFromDrawableIdAsync: set bitmap to " + drawableID);
+                    builder.setLargeIcon(bigImage);
                     mNotificationManager.notify(NOTIFICATION_ID, builder.build());
                 }
             }

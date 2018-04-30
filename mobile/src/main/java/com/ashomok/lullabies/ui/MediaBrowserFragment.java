@@ -295,22 +295,6 @@ public class MediaBrowserFragment extends Fragment {
         });
     }
 
-//    // An adapter for showing the list of browsed MediaItem's
-//    private static class BrowseAdapter extends ArrayAdapter<MediaBrowserCompat.MediaItem> {
-//
-//        public BrowseAdapter(Activity context) {
-//            super(context, R.layout.media_list_item, new ArrayList<MediaBrowserCompat.MediaItem>());
-//        }
-//
-//        @NonNull
-//        @Override
-//        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-//            MediaBrowserCompat.MediaItem item = getItem(position);
-//            return MediaItemViewHolder.setupListView((Activity) getContext(), convertView, parent,
-//                    item);
-//        }
-//    }
-
     public interface MediaFragmentListener extends MediaBrowserProvider {
         void onMediaItemSelected(MediaBrowserCompat.MediaItem item);
         void setToolbarTitle(CharSequence title);

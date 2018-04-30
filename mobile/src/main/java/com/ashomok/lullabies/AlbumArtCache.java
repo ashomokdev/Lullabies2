@@ -18,6 +18,7 @@ package com.ashomok.lullabies;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.ashomok.lullabies.utils.BitmapHelper;
@@ -31,7 +32,7 @@ import java.io.IOException;
 public final class AlbumArtCache {
     private static final String TAG = LogHelper.makeLogTag(AlbumArtCache.class);
 
-    private static final int MAX_ALBUM_ART_CACHE_SIZE = 12*1024*1024;  // 12 MB
+    private static final int MAX_ALBUM_ART_CACHE_SIZE = 12 * 1024 * 1024;  // 12 MB
     private static final int MAX_ART_WIDTH = 800;  // pixels
     private static final int MAX_ART_HEIGHT = 480;  // pixels
 
@@ -57,12 +58,12 @@ public final class AlbumArtCache {
         // Holds no more than MAX_ALBUM_ART_CACHE_SIZE bytes, bounded by maxmemory/4 and
         // Integer.MAX_VALUE:
         int maxSize = Math.min(MAX_ALBUM_ART_CACHE_SIZE,
-            (int) (Math.min(Integer.MAX_VALUE, Runtime.getRuntime().maxMemory()/4)));
+                (int) (Math.min(Integer.MAX_VALUE, Runtime.getRuntime().maxMemory() / 4)));
         mCache = new LruCache<String, Bitmap[]>(maxSize) {
             @Override
             protected int sizeOf(String key, Bitmap[] value) {
                 return value[BIG_BITMAP_INDEX].getByteCount()
-                    + value[ICON_BITMAP_INDEX].getByteCount();
+                        + value[ICON_BITMAP_INDEX].getByteCount();
             }
         };
     }
@@ -77,7 +78,50 @@ public final class AlbumArtCache {
         return result == null ? null : result[ICON_BITMAP_INDEX];
     }
 
-    public void fetch(final String artUrl, final FetchListener listener) {
+    //todo try to use Glide
+    public void fetch(final int drawableID, final FetchDrawableListener fetchDrawableListener) {
+        // WARNING: for the sake of simplicity, simultaneous multi-thread fetch requests
+        // are not handled properly: they may cause redundant costly operations, like bitmap rescales.
+        // For production-level apps, we recommend you use
+        // a proper image loading library, like Glide.
+        Bitmap[] bitmap = mCache.get(String.valueOf(drawableID));
+        if (bitmap != null) {
+            Log.d(TAG, "getOrFetch: album art is in cache, using it" + drawableID);
+            fetchDrawableListener.onFetched(drawableID, bitmap[BIG_BITMAP_INDEX], bitmap[ICON_BITMAP_INDEX]);
+            return;
+        }
+        Log.d(TAG, "getOrFetch: starting asynctask to fetch " + drawableID);
+
+        new AsyncTask<Void, Void, Bitmap[]>() {
+            @Override
+            protected Bitmap[] doInBackground(Void[] objects) {
+                Bitmap[] bitmaps;
+                Bitmap bitmap = BitmapHelper.fetchAndRescaleBitmap(drawableID,
+                        MAX_ART_WIDTH, MAX_ART_HEIGHT);
+                Bitmap icon = BitmapHelper.scaleBitmap(bitmap,
+                        MAX_ART_WIDTH_ICON, MAX_ART_HEIGHT_ICON);
+                bitmaps = new Bitmap[]{bitmap, icon};
+                mCache.put(String.valueOf(drawableID), bitmaps);
+
+                Log.d(TAG, "doInBackground: putting bitmap in cache. cache size=" +
+                        mCache.size());
+                return bitmaps;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap[] bitmaps) {
+                if (bitmaps == null) {
+                    fetchDrawableListener.onError(drawableID, new IllegalArgumentException("got null bitmaps"));
+                } else {
+                    fetchDrawableListener.onFetched(drawableID,
+                            bitmaps[BIG_BITMAP_INDEX], bitmaps[ICON_BITMAP_INDEX]);
+                }
+            }
+        }.execute();
+    }
+
+    //todo try to use Glide
+    public void fetch(final String artUrl, final FetchUrlListener listener) {
         // WARNING: for the sake of simplicity, simultaneous multi-thread fetch requests
         // are not handled properly: they may cause redundant costly operations, like HTTP
         // requests and bitmap rescales. For production-level apps, we recommend you use
@@ -96,16 +140,16 @@ public final class AlbumArtCache {
                 Bitmap[] bitmaps;
                 try {
                     Bitmap bitmap = BitmapHelper.fetchAndRescaleBitmap(artUrl,
-                        MAX_ART_WIDTH, MAX_ART_HEIGHT);
+                            MAX_ART_WIDTH, MAX_ART_HEIGHT);
                     Bitmap icon = BitmapHelper.scaleBitmap(bitmap,
-                        MAX_ART_WIDTH_ICON, MAX_ART_HEIGHT_ICON);
-                    bitmaps = new Bitmap[] {bitmap, icon};
+                            MAX_ART_WIDTH_ICON, MAX_ART_HEIGHT_ICON);
+                    bitmaps = new Bitmap[]{bitmap, icon};
                     mCache.put(artUrl, bitmaps);
                 } catch (IOException e) {
                     return null;
                 }
                 LogHelper.d(TAG, "doInBackground: putting bitmap in cache. cache size=" +
-                    mCache.size());
+                        mCache.size());
                 return bitmaps;
             }
 
@@ -115,16 +159,31 @@ public final class AlbumArtCache {
                     listener.onError(artUrl, new IllegalArgumentException("got null bitmaps"));
                 } else {
                     listener.onFetched(artUrl,
-                        bitmaps[BIG_BITMAP_INDEX], bitmaps[ICON_BITMAP_INDEX]);
+                            bitmaps[BIG_BITMAP_INDEX], bitmaps[ICON_BITMAP_INDEX]);
                 }
             }
         }.execute();
     }
 
-    public static abstract class FetchListener {
+    public Bitmap getBigImage(int drawableID) {
+        Bitmap[] result = mCache.get(String.valueOf(drawableID));
+        return result == null ? null : result[BIG_BITMAP_INDEX];
+    }
+
+
+    public static abstract class FetchUrlListener {
         public abstract void onFetched(String artUrl, Bitmap bigImage, Bitmap iconImage);
+
         public void onError(String artUrl, Exception e) {
             LogHelper.e(TAG, e, "AlbumArtFetchListener: error while downloading " + artUrl);
+        }
+    }
+
+    public static abstract class FetchDrawableListener {
+        public abstract void onFetched(int drawableId, Bitmap bigImage, Bitmap iconImage);
+
+        public void onError(int drawableId, Exception e) {
+            LogHelper.e(TAG, e, "AlbumArtFetchListener: error while obtaining " + drawableId);
         }
     }
 }

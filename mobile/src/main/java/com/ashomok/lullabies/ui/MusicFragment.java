@@ -1,6 +1,7 @@
 package com.ashomok.lullabies.ui;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -47,7 +48,7 @@ public class MusicFragment extends Fragment {
         MusicFragment pageFragment = new MusicFragment();
         Bundle arguments = new Bundle();
 
-        arguments.putParcelable(ARGUMENT_MEDIA_ITEM,mediaItem);
+        arguments.putParcelable(ARGUMENT_MEDIA_ITEM, mediaItem);
 
         pageFragment.setArguments(arguments);
         return pageFragment;
@@ -65,32 +66,42 @@ public class MusicFragment extends Fragment {
         return view;
     }
 
+
+    //todo what if image drawable come
     private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
-        if (description.getIconUri() == null) {
-            return;
+        if (description.getIconUri() == null && description.getIconBitmap() == null) {
+            return; //cals every time - todo fix it
         }
-        String artUrl = description.getIconUri().toString();
-        mCurrentArtUrl = artUrl;
-        AlbumArtCache cache = AlbumArtCache.getInstance();
-        Bitmap art = cache.getBigImage(artUrl);
-        if (art == null) {
-            art = description.getIconBitmap();
-        }
-        if (art != null) {
-            // if we have the art cached or from the MediaDescription, use it:
-            mBackgroundImage.setImageBitmap(art);
-        } else {
-            // otherwise, fetch a high res version and update:
-            cache.fetch(artUrl, new AlbumArtCache.FetchListener() {
-                @Override
-                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
-                    // sanity check, in case a new fetch request has been done while
-                    // the previous hasn't yet returned:
-                    if (artUrl.equals(mCurrentArtUrl)) {
-                        mBackgroundImage.setImageBitmap(bitmap);
+
+        Uri iconUri = description.getIconUri();
+
+        if (iconUri != null) {
+            String artUrl = iconUri.toString();
+            mCurrentArtUrl = artUrl;
+            AlbumArtCache cache = AlbumArtCache.getInstance();
+            Bitmap art = cache.getBigImage(artUrl);
+            if (art == null) {
+                art = description.getIconBitmap();
+            }
+            if (art != null) {
+                // if we have the art cached or from the MediaDescription, use it:
+                mBackgroundImage.setImageBitmap(art);
+            } else {
+                // otherwise, fetch a high res version and update:
+                cache.fetch(artUrl, new AlbumArtCache.FetchUrlListener() {
+                    @Override
+                    public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
+                        // sanity check, in case a new fetch request has been done while
+                        // the previous hasn't yet returned:
+                        if (artUrl.equals(mCurrentArtUrl)) {
+                            mBackgroundImage.setImageBitmap(bitmap);
+                        }
                     }
-                }
-            });
+                });
+            }
+        } else {
+            Bitmap art = description.getIconBitmap();
+            mBackgroundImage.setImageBitmap(art);
         }
     }
 }

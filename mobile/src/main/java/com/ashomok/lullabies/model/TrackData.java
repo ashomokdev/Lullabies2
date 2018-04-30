@@ -29,6 +29,19 @@ public class TrackData {
         this.durationMs = durationMs;
     }
 
+    public TrackData(String title, String album, String artist, String genre, int source,
+                     int imageDrawableId, int trackNumber, int totalTrackCount, int durationMs) {
+        this.title = title;
+        this.album = album;
+        this.artist = artist;
+        this.genre = genre;
+        this.trackNumber = trackNumber;
+        this.imageDrawableId = imageDrawableId;
+        this.source = source;
+        this.totalTrackCount = totalTrackCount;
+        this.durationMs = durationMs;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -63,5 +76,9 @@ public class TrackData {
 
     public String getAlbumArtUri() {
         return albumArtUri;
+    }
+
+    public int getImageDrawableId() {
+        return imageDrawableId;
     }
 }

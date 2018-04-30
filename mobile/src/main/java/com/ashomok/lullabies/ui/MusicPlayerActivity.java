@@ -64,10 +64,9 @@ public class MusicPlayerActivity extends BaseActivity
         super.onSaveInstanceState(outState);
     }
 
-    //error when come back from toolbar
     @Override
     public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
-        LogHelper.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId()); //todo null pointer sometimes here
+        LogHelper.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId());
         if (item.isPlayable()) {
             MediaControllerCompat.getMediaController(MusicPlayerActivity.this).getTransportControls()
                     .playFromMediaId(item.getMediaId(), null);
@@ -92,7 +91,6 @@ public class MusicPlayerActivity extends BaseActivity
     protected void onNewIntent(Intent intent) {
         LogHelper.d(TAG, "onNewIntent, intent=" + intent);
         initializeFromParams(null, intent);
-//        startFullScreenActivityIfNeeded(intent); //todo
     }
 
     protected void initializeFromParams(Bundle savedInstanceState, Intent intent) {

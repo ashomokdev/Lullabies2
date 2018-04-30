@@ -31,7 +31,7 @@ public class SimpleMusicProviderSource implements MusicProviderSource {
 
 
     public void add(String title, String album, String artist, String genre, int source,
-                    String albumArtUri, long trackNumber, long totalTrackCount, long durationMs) {
+                    String albumArtUri, int imageDrawableId, long trackNumber, long totalTrackCount, long durationMs) {
         String id = String.valueOf(trackNumber);
 
         //noinspection ResourceType
@@ -39,6 +39,7 @@ public class SimpleMusicProviderSource implements MusicProviderSource {
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, id)
                 .putLong(CUSTOM_METADATA_TRACK_SOURCE, source)
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, albumArtUri)
+                .putLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID, imageDrawableId)
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, durationMs)
@@ -51,8 +52,8 @@ public class SimpleMusicProviderSource implements MusicProviderSource {
 
     public void add(TrackData trackData) {
         add(trackData.getTitle(), trackData.getAlbum(), trackData.getArtist(), trackData.getGenre(),
-                trackData.getSource(), trackData.getAlbumArtUri(), trackData.getTrackNumber(),
-                trackData.getTotalTrackCount(), trackData.getDurationMs());
+                trackData.getSource(), trackData.getAlbumArtUri(), trackData.getImageDrawableId(),
+                trackData.getTrackNumber(), trackData.getTotalTrackCount(), trackData.getDurationMs());
     }
 
     @Override
