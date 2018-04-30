@@ -48,7 +48,7 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@id/playback_error">
 
-        <android.support.v4.view.ViewPager
+        <com.ashomok.lullabies.utils.ClickableViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

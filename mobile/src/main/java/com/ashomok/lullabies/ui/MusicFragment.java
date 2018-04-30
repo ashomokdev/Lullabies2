@@ -62,15 +62,6 @@ public class MusicFragment extends Fragment {
         View view = inflater.inflate(R.layout.music_fragment, null);
         mBackgroundImage = view.findViewById(R.id.image);
         fetchImageAsync(mediaItem.getDescription());
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onPageSelected, position " + position);
-                checkForUserVisibleErrors(false);
-
-                mMediaFragmentListener.onMediaItemSelected(mediaItem);
-            }
-        });
         return view;
     }
 

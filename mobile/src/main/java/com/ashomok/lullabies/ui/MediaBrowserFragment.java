@@ -45,6 +45,7 @@ import android.widget.Toast;
 import com.ashomok.lullabies.MusicService;
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.tools.CircleView;
+import com.ashomok.lullabies.utils.ClickableViewPager;
 import com.ashomok.lullabies.utils.LogHelper;
 import com.ashomok.lullabies.utils.MediaIDHelper;
 import com.ashomok.lullabies.utils.NetworkHelper;
@@ -71,7 +72,7 @@ public class MediaBrowserFragment extends Fragment {
     private FragmentActivity myContext;
     private View mErrorView;
     private TextView mErrorMessage;
-    ViewPager mPager;
+    ClickableViewPager mPager;
     LullabiesPagerAdapter mBrowserAdapter;
 
 
@@ -146,13 +147,21 @@ public class MediaBrowserFragment extends Fragment {
 
 
         //init pager
-        mPager = (ViewPager) rootView.findViewById(R.id.pager);
+        mPager = rootView.findViewById(R.id.pager);
         mBrowserAdapter = new LullabiesPagerAdapter(
                 myContext.getSupportFragmentManager());
         mPager.setAdapter(mBrowserAdapter);
 
-        mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
-        //todo set on click listener
+        mPager.setOnItemClickListener(new ClickableViewPager.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Log.d(TAG, "onPageClicked, position " + position);
+                checkForUserVisibleErrors(false);
+                MediaBrowserCompat.MediaItem item = mBrowserAdapter.getItem(position).getMediaItem();
+                mMediaFragmentListener.onMediaItemSelected(item);
+            }
+        });
+
         CircleView circleView = (CircleView) rootView.findViewById(R.id.circle_view);
         circleView.setColorAccent(getResources().getColor(R.color.bt_accent));
         circleView.setColorBase(getResources().getColor(R.color.cardview_dark_background));
@@ -286,45 +295,24 @@ public class MediaBrowserFragment extends Fragment {
         });
     }
 
-    // An adapter for showing the list of browsed MediaItem's
-    private static class BrowseAdapter extends ArrayAdapter<MediaBrowserCompat.MediaItem> {
-
-        public BrowseAdapter(Activity context) {
-            super(context, R.layout.media_list_item, new ArrayList<MediaBrowserCompat.MediaItem>());
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            MediaBrowserCompat.MediaItem item = getItem(position);
-            return MediaItemViewHolder.setupListView((Activity) getContext(), convertView, parent,
-                    item);
-        }
-    }
+//    // An adapter for showing the list of browsed MediaItem's
+//    private static class BrowseAdapter extends ArrayAdapter<MediaBrowserCompat.MediaItem> {
+//
+//        public BrowseAdapter(Activity context) {
+//            super(context, R.layout.media_list_item, new ArrayList<MediaBrowserCompat.MediaItem>());
+//        }
+//
+//        @NonNull
+//        @Override
+//        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+//            MediaBrowserCompat.MediaItem item = getItem(position);
+//            return MediaItemViewHolder.setupListView((Activity) getContext(), convertView, parent,
+//                    item);
+//        }
+//    }
 
     public interface MediaFragmentListener extends MediaBrowserProvider {
         void onMediaItemSelected(MediaBrowserCompat.MediaItem item);
         void setToolbarTitle(CharSequence title);
     }
-
-    private class OnPageChangeListenerImpl implements ViewPager.OnPageChangeListener {
-        public final String TAG = LogHelper.makeLogTag(OnPageChangeListenerImpl.class);
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        }
-
-        @Override
-        public void onPageSelected(final int position) {
-            Log.d(TAG, "onPageSelected, position " + position);
-            checkForUserVisibleErrors(false);
-            MediaBrowserCompat.MediaItem item = mBrowserAdapter.getItem(position).getMediaItem();
-            mMediaFragmentListener.onMediaItemSelected(item);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-        }
-    }
-
 }
