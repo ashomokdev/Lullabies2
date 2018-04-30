@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,15 @@ public class MusicFragment extends Fragment {
         View view = inflater.inflate(R.layout.music_fragment, null);
         mBackgroundImage = view.findViewById(R.id.image);
         fetchImageAsync(mediaItem.getDescription());
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onPageSelected, position " + position);
+                checkForUserVisibleErrors(false);
+
+                mMediaFragmentListener.onMediaItemSelected(mediaItem);
+            }
+        });
         return view;
     }
 

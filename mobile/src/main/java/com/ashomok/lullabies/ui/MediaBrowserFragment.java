@@ -150,6 +150,7 @@ public class MediaBrowserFragment extends Fragment {
         mBrowserAdapter = new LullabiesPagerAdapter(
                 myContext.getSupportFragmentManager());
         mPager.setAdapter(mBrowserAdapter);
+
         mPager.addOnPageChangeListener(new OnPageChangeListenerImpl());
         //todo set on click listener
         CircleView circleView = (CircleView) rootView.findViewById(R.id.circle_view);
@@ -315,7 +316,7 @@ public class MediaBrowserFragment extends Fragment {
 
         @Override
         public void onPageSelected(final int position) {
-            Log.d(TAG, "page selected " + position);
+            Log.d(TAG, "onPageSelected, position " + position);
             checkForUserVisibleErrors(false);
             MediaBrowserCompat.MediaItem item = mBrowserAdapter.getItem(position).getMediaItem();
             mMediaFragmentListener.onMediaItemSelected(item);

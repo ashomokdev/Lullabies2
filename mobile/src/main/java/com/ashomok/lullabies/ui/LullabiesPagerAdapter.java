@@ -1,10 +1,8 @@
 package com.ashomok.lullabies.ui;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.media.MediaBrowserCompat;
-import android.util.Log;
 
 import com.ashomok.lullabies.utils.LogHelper;
 
