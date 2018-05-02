@@ -30,7 +30,7 @@ public class LullabiesPagerAdapter extends FragmentStatePagerAdapter {
         return myFragments.get(position);
     }
 
-    public void add(MediaBrowserCompat.MediaItem item) {
+    public void addFragment(MediaBrowserCompat.MediaItem item) {
         myFragments.add(FragmentFactory.newInstance(item));
     }
 
