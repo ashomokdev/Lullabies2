@@ -52,6 +52,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+
 import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_EMPTY_ROOT;
 import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_ROOT;
 
@@ -133,7 +137,8 @@ public class MusicService extends MediaBrowserServiceCompat implements
     // Delay stopSelf by using a handler.
     private static final int STOP_DELAY = 30000;
 
-    private MusicProvider mMusicProvider;
+    @Inject MusicProvider mMusicProvider;
+
     private PlaybackManager mPlaybackManager;
 
     private MediaSessionCompat mSession;
@@ -151,10 +156,9 @@ public class MusicService extends MediaBrowserServiceCompat implements
      */
     @Override
     public void onCreate() {
+        AndroidInjection.inject(this);
         super.onCreate();
         LogHelper.d(TAG, "onCreate");
-
-        mMusicProvider = new MusicProvider();
 
         // To make the app more responsive, fetch and cache catalog information now.
         // This can help improve the response time in the method

@@ -80,4 +80,5 @@
     <!-- Notificaiton Channel -->
     <string name="notification_channel">UAMP_Channel_ID</string>
     <string name="notification_channel_description">Channel ID for UAMP</string>
+    <string name="preferences" translatable="false">preferences</string>
 </resources>

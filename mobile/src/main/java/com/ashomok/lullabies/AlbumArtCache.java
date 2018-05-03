@@ -92,32 +92,32 @@ public final class AlbumArtCache {
         }
         Log.d(TAG, "getOrFetch: starting asynctask to fetch " + drawableID);
 
-        new AsyncTask<Void, Void, Bitmap[]>() {
-            @Override
-            protected Bitmap[] doInBackground(Void[] objects) {
-                Bitmap[] bitmaps;
-                Bitmap bitmap = BitmapHelper.fetchAndRescaleBitmap(drawableID,
-                        MAX_ART_WIDTH, MAX_ART_HEIGHT);
-                Bitmap icon = BitmapHelper.scaleBitmap(bitmap,
-                        MAX_ART_WIDTH_ICON, MAX_ART_HEIGHT_ICON);
-                bitmaps = new Bitmap[]{bitmap, icon};
-                mCache.put(String.valueOf(drawableID), bitmaps);
-
-                Log.d(TAG, "doInBackground: putting bitmap in cache. cache size=" +
-                        mCache.size());
-                return bitmaps;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap[] bitmaps) {
-                if (bitmaps == null) {
-                    fetchDrawableListener.onError(drawableID, new IllegalArgumentException("got null bitmaps"));
-                } else {
-                    fetchDrawableListener.onFetched(drawableID,
-                            bitmaps[BIG_BITMAP_INDEX], bitmaps[ICON_BITMAP_INDEX]);
-                }
-            }
-        }.execute();
+//        new AsyncTask<Void, Void, Bitmap[]>() {
+//            @Override
+//            protected Bitmap[] doInBackground(Void[] objects) {
+//                Bitmap[] bitmaps;
+//                Bitmap bitmap = BitmapHelper.fetchAndRescaleBitmap(drawableID,
+//                        MAX_ART_WIDTH, MAX_ART_HEIGHT);
+//                Bitmap icon = BitmapHelper.scaleBitmap(bitmap,
+//                        MAX_ART_WIDTH_ICON, MAX_ART_HEIGHT_ICON);
+//                bitmaps = new Bitmap[]{bitmap, icon};
+//                mCache.put(String.valueOf(drawableID), bitmaps);
+//
+//                Log.d(TAG, "doInBackground: putting bitmap in cache. cache size=" +
+//                        mCache.size());
+//                return bitmaps;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Bitmap[] bitmaps) {
+//                if (bitmaps == null) {
+//                    fetchDrawableListener.onError(drawableID, new IllegalArgumentException("got null bitmaps"));
+//                } else {
+//                    fetchDrawableListener.onFetched(drawableID,
+//                            bitmaps[BIG_BITMAP_INDEX], bitmaps[ICON_BITMAP_INDEX]);
+//                }
+//            }
+//        }.execute();
     }
 
     //todo try to use Glide

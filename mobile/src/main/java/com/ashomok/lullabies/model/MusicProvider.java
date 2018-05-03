@@ -16,6 +16,7 @@
 
 package com.ashomok.lullabies.model;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -35,6 +36,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_GENRE;
 import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_ROOT;
 
@@ -42,6 +46,8 @@ import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_ROOT;
  * Simple data provider for music tracks. The actual metadata source is delegated to a
  * MusicProviderSource defined by a constructor argument of this class.
  */
+//todo move from app module to activity module
+@Singleton
 public class MusicProvider {
 
     private static final String TAG = LogHelper.makeLogTag(MusicProvider.class);
@@ -64,9 +70,10 @@ public class MusicProvider {
         void onMusicCatalogReady(boolean success);
     }
 
-    public MusicProvider() {
+    @Inject
+    public MusicProvider(Context context) {
         SimpleMusicProviderSource source = new SimpleMusicProviderSource();
-        MusicSource musicSource = new MusicSource();
+        MusicSource musicSource = new MusicSource(context);
         ArrayList<TrackData> musicItems = musicSource.getMusicSource();
         for (TrackData item : musicItems) {
             source.add(item);
@@ -80,7 +87,7 @@ public class MusicProvider {
         Log.d(TAG, "musicProvider created");
     }
 
-    public MusicProvider(MusicProviderSource source) {
+    public MusicProvider(MusicProviderSource source) { //todo source should also be injected!
         mSource = source;
         mMusicListByGenre = new ConcurrentHashMap<>();
         mMusicListById = new ConcurrentHashMap<>();

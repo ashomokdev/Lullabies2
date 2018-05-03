@@ -67,10 +67,10 @@ public class MusicFragment extends Fragment {
     }
 
 
-
+//todo add dagger
     //todo what if image drawable come
     private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
-  description.getExtras() //todo use this idea
+//  description.getExtras() //todo use this idea
         if (description.getIconUri() == null && description.getIconBitmap() == null) {
             return; //cals every time - todo fix it
         }

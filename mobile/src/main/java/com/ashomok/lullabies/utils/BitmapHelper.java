@@ -21,8 +21,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import com.ashomok.lullabies.MyApplication;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,20 +84,20 @@ public class BitmapHelper {
         }
     }
 
-    @SuppressWarnings("SameParameterValue")
-    public static Bitmap fetchAndRescaleBitmap(int drawableId, int width, int height) {
-
-        Context context = MyApplication.getAppContext();
-        int scaleFactor = 0;
-        try {
-            scaleFactor = findScaleFactor(width, height, context, drawableId);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
-        Log.d(TAG, "Scaling bitmap from id " + drawableId + " by factor " + scaleFactor + " to support " +
-                width + "x" + height + "requested dimension");
-        return scaleBitmap(scaleFactor, context, drawableId);
-    }
+//    @SuppressWarnings("SameParameterValue")
+//    public static Bitmap fetchAndRescaleBitmap(int drawableId, int width, int height) {
+//
+//        Context context = MyApplication.getAppContext();
+//        int scaleFactor = 0;
+//        try {
+//            scaleFactor = findScaleFactor(width, height, context, drawableId);
+//        } catch (Exception e) {
+//            Log.e(TAG, e.getMessage());
+//        }
+//        Log.d(TAG, "Scaling bitmap from id " + drawableId + " by factor " + scaleFactor + " to support " +
+//                width + "x" + height + "requested dimension");
+//        return scaleBitmap(scaleFactor, context, drawableId);
+//    }
 
     private static int findScaleFactor(int targetW, int targetH, Context context, int drawableId) {
         // Get the dimensions of the image

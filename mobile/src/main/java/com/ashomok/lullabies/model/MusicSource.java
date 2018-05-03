@@ -1,19 +1,25 @@
 package com.ashomok.lullabies.model;
 
 import android.content.Context;
-import android.net.Uri;
 
-import com.ashomok.lullabies.MyApplication;
 import com.ashomok.lullabies.R;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 public class MusicSource {
+
     private ArrayList<TrackData> musicSource = new ArrayList<>();
+    private Context context;
 
     public ArrayList<TrackData> getMusicSource() {
-        Context context = MyApplication.getAppContext();
         return getMusicSource(context);
+    }
+
+    @Inject
+    public MusicSource(Context context) {
+        this.context = context;
     }
 
     public ArrayList<TrackData> getMusicSource(Context context) {
