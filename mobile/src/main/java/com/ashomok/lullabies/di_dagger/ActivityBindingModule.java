@@ -21,26 +21,8 @@ public abstract class ActivityBindingModule {
     @ContributesAndroidInjector (modules = MusicServiceModule.class)
     abstract MusicService musicService();
 
-    @ContributesAndroidInjector (modules = MainModule.class)
+    @ContributesAndroidInjector (modules = {
+            MainModule.class,
+            MusicServiceModule.class})
     abstract MainActivity mainActivity();
-
-//    @ActivityScoped
-//    @ContributesAndroidInjector(modules = MainModule.class)
-//    abstract MainActivity mainActivity();
-//
-//    @ActivityScoped
-//    @ContributesAndroidInjector(modules = LanguageOcrModule.class)
-//    abstract LanguageOcrActivity languageOcrActivity();
-//
-//    @ActivityScoped
-//    @ContributesAndroidInjector(modules = MyDocsModule.class)
-//    abstract MyDocsActivity myDocsActivity();
-//
-//    @ActivityScoped
-//    @ContributesAndroidInjector(modules = UpdateToPremiumModule.class)
-//    abstract UpdateToPremiumActivity updateToPremiumActivity();
-//
-//    @ActivityScoped
-//    @ContributesAndroidInjector(modules = GetMoreRequestsModule.class)
-//    abstract GetMoreRequestsActivity getMoreRequestsActivity();
 }

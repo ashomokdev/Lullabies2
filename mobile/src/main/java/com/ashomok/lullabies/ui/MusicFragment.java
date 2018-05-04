@@ -21,17 +21,14 @@ import com.ashomok.lullabies.rate_app.RateAppAsker;
 import com.ashomok.lullabies.utils.LogHelper;
 
 import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
-import dagger.android.DaggerFragment;
-import dagger.android.support.AndroidSupportInjection;
+import dagger.android.support.DaggerFragment;
 
 /**
  * Created by iuliia on 03.05.16.
  */
 
 //see FullScreenPlayerActivity if you want to add more components
-public class MusicFragment extends dagger.android.support.DaggerFragment {
+public class MusicFragment extends DaggerFragment {
 
     private static final String TAG = LogHelper.makeLogTag(MusicFragment.class);
     private static final String ARGUMENT_MEDIA_ITEM = "media_item";
@@ -59,13 +56,6 @@ public class MusicFragment extends dagger.android.support.DaggerFragment {
         RateAppAsker.init(getActivity());
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        AndroidSupportInjection.inject(this);
-//        super.onAttach(context);
-//    }
-
-
     static MusicFragment newInstance(MediaBrowserCompat.MediaItem mediaItem) {
         MusicFragment pageFragment = new MusicFragment();
         Bundle arguments = new Bundle();
@@ -87,7 +77,6 @@ public class MusicFragment extends dagger.android.support.DaggerFragment {
         fetchImageAsync(mediaItem.getDescription());
         return view;
     }
-
 
     //todo what if image drawable come
     private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
