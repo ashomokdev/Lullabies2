@@ -1,13 +1,12 @@
 package com.ashomok.lullabies.ui;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.support.v4.media.MediaMetadataCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +15,24 @@ import android.widget.ImageView;
 
 import com.ashomok.lullabies.AlbumArtCache;
 import com.ashomok.lullabies.R;
+import com.ashomok.lullabies.di_dagger.ActivityScoped;
 import com.ashomok.lullabies.model.MusicProvider;
 import com.ashomok.lullabies.rate_app.RateAppAsker;
 import com.ashomok.lullabies.utils.LogHelper;
+import com.ashomok.lullabies.utils.MediaIDHelper;
 
 import javax.inject.Inject;
+
 import dagger.android.support.DaggerFragment;
+
+import static com.ashomok.lullabies.model.MusicProviderSource.CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID;
 
 /**
  * Created by iuliia on 03.05.16.
  */
 
 //see FullScreenPlayerActivity if you want to add more components
+@ActivityScoped
 public class MusicFragment extends DaggerFragment {
 
     private static final String TAG = LogHelper.makeLogTag(MusicFragment.class);
@@ -35,6 +40,7 @@ public class MusicFragment extends DaggerFragment {
     private MediaBrowserCompat.MediaItem mediaItem;
     private ImageView mBackgroundImage;
     private String mCurrentArtUrl;
+    private int mCurrentDrawableID;
 
     @Inject
     MusicProvider musicProvider;
@@ -57,6 +63,7 @@ public class MusicFragment extends DaggerFragment {
     }
 
     static MusicFragment newInstance(MediaBrowserCompat.MediaItem mediaItem) {
+        Log.d(TAG, "newInstance called with " + mediaItem.getDescription().getMediaId());
         MusicFragment pageFragment = new MusicFragment();
         Bundle arguments = new Bundle();
 
@@ -78,45 +85,68 @@ public class MusicFragment extends DaggerFragment {
         return view;
     }
 
-    //todo what if image drawable come
     private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
-        if (musicProvider != null)
-        {
-
-        }
-        if (description.getIconUri() == null && description.getIconBitmap() == null) {
-            return; //cals every time - todo fix it
-        }
-
-        Uri iconUri = description.getIconUri();
-
-        if (iconUri != null) {
-            String artUrl = iconUri.toString();
-            mCurrentArtUrl = artUrl;
-            AlbumArtCache cache = AlbumArtCache.getInstance();
-            Bitmap art = cache.getBigImage(artUrl);
-            if (art == null) {
-                art = description.getIconBitmap();
-            }
-            if (art != null) {
-                // if we have the art cached or from the MediaDescription, use it:
-                mBackgroundImage.setImageBitmap(art);
-            } else {
-                // otherwise, fetch a high res version and update:
-                cache.fetch(artUrl, new AlbumArtCache.FetchUrlListener() {
-                    @Override
-                    public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
-                        // sanity check, in case a new fetch request has been done while
-                        // the previous hasn't yet returned:
-                        if (artUrl.equals(mCurrentArtUrl)) {
-                            mBackgroundImage.setImageBitmap(bitmap);
-                        }
-                    }
-                });
-            }
+        AlbumArtCache cache = AlbumArtCache.getInstance();
+        if (description.getIconUri() == null) {
+            fetchImageFromDrawable(description, cache);
         } else {
-            Bitmap art = description.getIconBitmap();
+            fetchImageFromUri(description, cache);
+        }
+    }
+
+    private void fetchImageFromUri(@NonNull MediaDescriptionCompat description, AlbumArtCache cache) {
+        Uri iconUri = description.getIconUri();
+        String artUrl = iconUri.toString();
+        mCurrentArtUrl = artUrl;
+        Bitmap art = cache.getBigImage(artUrl);
+        if (art == null) {
+            art = description.getIconBitmap();
+        }
+        if (art != null) {
+            // if we have the art cached or from the MediaDescription, use it:
             mBackgroundImage.setImageBitmap(art);
+        } else {
+            // otherwise, fetch a high res version and update:
+            cache.fetch(artUrl, new AlbumArtCache.FetchUrlListener() {
+                @Override
+                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
+                    // sanity check, in case a new fetch request has been done while
+                    // the previous hasn't yet returned:
+                    if (artUrl.equals(mCurrentArtUrl)) {
+                        mBackgroundImage.setImageBitmap(bitmap);
+                    }
+                }
+            });
+        }
+    }
+
+    private void fetchImageFromDrawable(@NonNull MediaDescriptionCompat description, AlbumArtCache cache) {
+        if (musicProvider != null) {
+            MediaMetadataCompat mMetadata =
+                    musicProvider.getMusic(MediaIDHelper.extractMusicIDFromMediaID(mediaItem.getMediaId()));
+            int drawableID = (int) mMetadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID);
+            if (drawableID != 0) {
+                mCurrentDrawableID = drawableID;
+                // async fetch the album art icon
+                Bitmap art = AlbumArtCache.getInstance().getBigImage(drawableID);
+
+                if (art != null) {
+                    // if we have the art cached or from the MediaDescription, use it:
+                    mBackgroundImage.setImageBitmap(art);
+                } else {
+                    // otherwise, fetch a high res version and update:
+                    cache.fetch(getContext(), drawableID, new AlbumArtCache.FetchDrawableListener() {
+                        @Override
+                        public void onFetched(int drawableId, Bitmap bitmap, Bitmap iconImage) {
+                            // sanity check, in case a new fetch request has been done while
+                            // the previous hasn't yet returned:
+                            if (mCurrentDrawableID == drawableId) {
+                                mBackgroundImage.setImageBitmap(bitmap);
+                            }
+                        }
+                    });
+                }
+            }
         }
     }
 }

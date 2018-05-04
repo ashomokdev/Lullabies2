@@ -17,5 +17,6 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class MainModule {
 
     @ContributesAndroidInjector
+    @FragmentScoped
     abstract MusicFragment musicFragment();
 }

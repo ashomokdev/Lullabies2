@@ -32,6 +32,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.media.MediaRouter;
 
+import com.ashomok.lullabies.di_dagger.ActivityScoped;
 import com.ashomok.lullabies.model.MusicProvider;
 import com.ashomok.lullabies.playback.CastPlayback;
 import com.ashomok.lullabies.playback.LocalPlayback;
@@ -167,7 +168,7 @@ public class MusicService extends MediaBrowserServiceCompat implements
 
         mPackageValidator = new PackageValidator(this);
 
-        QueueManager queueManager = new QueueManager(mMusicProvider, getResources(),
+        QueueManager queueManager = new QueueManager(getApplication(), mMusicProvider, getResources(),
                 new QueueManager.MetadataUpdateListener() {
                     @Override
                     public void onMetadataChanged(MediaMetadataCompat metadata) {

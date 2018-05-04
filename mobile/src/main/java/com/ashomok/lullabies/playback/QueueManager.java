@@ -16,6 +16,7 @@
 
 package com.ashomok.lullabies.playback;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -45,6 +46,7 @@ import static com.ashomok.lullabies.model.MusicProviderSource.CUSTOM_METADATA_TR
  */
 public class QueueManager {
     private static final String TAG = LogHelper.makeLogTag(QueueManager.class);
+    private final Context context;
 
     private MusicProvider mMusicProvider;
     private MetadataUpdateListener mListener;
@@ -54,9 +56,10 @@ public class QueueManager {
     private List<MediaSessionCompat.QueueItem> mPlayingQueue;
     private int mCurrentIndex;
 
-    public QueueManager(@NonNull MusicProvider musicProvider,
+    public QueueManager(Context context, @NonNull MusicProvider musicProvider,
                         @NonNull Resources resources,
                         @NonNull MetadataUpdateListener listener) {
+        this.context = context;
         this.mMusicProvider = musicProvider;
         this.mListener = listener;
         this.mResources = resources;
@@ -203,7 +206,7 @@ public class QueueManager {
                 Uri iconUri = metadata.getDescription().getIconUri();
                 if (iconUri == null) {
                     int image = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID);
-                    AlbumArtCache.getInstance().fetch(image, new AlbumArtCache.FetchDrawableListener() {
+                    AlbumArtCache.getInstance().fetch(context, image, new AlbumArtCache.FetchDrawableListener() {
                         @Override
                         public void onFetched(int drawableID, Bitmap bitmap, Bitmap icon) {
                             mMusicProvider.updateMusicArt(musicId, bitmap, icon);

@@ -7,7 +7,9 @@ import com.ashomok.lullabies.R;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class MusicSource {
 
     private ArrayList<TrackData> musicSource = new ArrayList<>();

@@ -21,6 +21,7 @@ public abstract class ActivityBindingModule {
     @ContributesAndroidInjector (modules = MusicServiceModule.class)
     abstract MusicService musicService();
 
+    @ActivityScoped
     @ContributesAndroidInjector (modules = {
             MainModule.class,
             MusicServiceModule.class})

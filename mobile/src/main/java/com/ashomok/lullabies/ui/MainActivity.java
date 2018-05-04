@@ -47,8 +47,8 @@ public class MainActivity extends BaseActivity
 
     private Bundle mVoiceSearchParams;
 
-    @Inject
-    MusicFragment mFragment;
+//    @Inject
+//    MusicFragment mFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

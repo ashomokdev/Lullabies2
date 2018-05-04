@@ -11,6 +11,8 @@ import com.ashomok.lullabies.model.MusicProvider;
 import com.ashomok.lullabies.model.MusicSource;
 import com.ashomok.lullabies.ui.MusicFragment;
 
+import javax.inject.Singleton;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -22,13 +24,5 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class MusicServiceModule {
 
-    @Provides
-    static MusicProvider provideMusicProvider(Context context){
-        return new MusicProvider(context);
-    }
 
-    @Provides
-    static MusicSource provideMusicSource(Context context){
-        return new MusicSource(context);
-    }
 }

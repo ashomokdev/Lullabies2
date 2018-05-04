@@ -8,6 +8,8 @@ import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.model.MusicProvider;
 import com.ashomok.lullabies.model.MusicSource;
 
+import javax.inject.Singleton;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -31,6 +33,18 @@ public abstract class ApplicationModule {
     static SharedPreferences provideSharedPrefs(Context context) {
         return context.getSharedPreferences(
                 context.getString(R.string.preferences), Context.MODE_PRIVATE);
+    }
+
+    @Provides
+    @Singleton
+    static MusicProvider provideMusicProvider(Context context){
+        return new MusicProvider(context);
+    }
+
+    @Provides
+    @Singleton
+    static MusicSource provideMusicSource(Context context){
+        return new MusicSource(context);
     }
 }
 

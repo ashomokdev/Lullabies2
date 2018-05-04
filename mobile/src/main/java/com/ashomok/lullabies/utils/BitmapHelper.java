@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.inject.Singleton;
+
 public class BitmapHelper {
     private static final String TAG = LogHelper.makeLogTag(BitmapHelper.class);
 
@@ -84,20 +86,18 @@ public class BitmapHelper {
         }
     }
 
-//    @SuppressWarnings("SameParameterValue")
-//    public static Bitmap fetchAndRescaleBitmap(int drawableId, int width, int height) {
-//
-//        Context context = MyApplication.getAppContext();
-//        int scaleFactor = 0;
-//        try {
-//            scaleFactor = findScaleFactor(width, height, context, drawableId);
-//        } catch (Exception e) {
-//            Log.e(TAG, e.getMessage());
-//        }
-//        Log.d(TAG, "Scaling bitmap from id " + drawableId + " by factor " + scaleFactor + " to support " +
-//                width + "x" + height + "requested dimension");
-//        return scaleBitmap(scaleFactor, context, drawableId);
-//    }
+    @SuppressWarnings("SameParameterValue")
+    public static Bitmap fetchAndRescaleBitmap(Context context, int drawableId, int width, int height) {
+        int scaleFactor = 0;
+        try {
+            scaleFactor = findScaleFactor(width, height, context, drawableId);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        Log.d(TAG, "Scaling bitmap from id " + drawableId + " by factor " + scaleFactor + " to support " +
+                width + "x" + height + "requested dimension");
+        return scaleBitmap(scaleFactor, context, drawableId);
+    }
 
     private static int findScaleFactor(int targetW, int targetH, Context context, int drawableId) {
         // Get the dimensions of the image

@@ -16,6 +16,7 @@
 
 package com.ashomok.lullabies;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -79,7 +80,7 @@ public final class AlbumArtCache {
     }
 
     //todo try to use Glide
-    public void fetch(final int drawableID, final FetchDrawableListener fetchDrawableListener) {
+    public void fetch(final Context context, final int drawableID, final FetchDrawableListener fetchDrawableListener) {
         // WARNING: for the sake of simplicity, simultaneous multi-thread fetch requests
         // are not handled properly: they may cause redundant costly operations, like bitmap rescales.
         // For production-level apps, we recommend you use
@@ -92,32 +93,33 @@ public final class AlbumArtCache {
         }
         Log.d(TAG, "getOrFetch: starting asynctask to fetch " + drawableID);
 
-//        new AsyncTask<Void, Void, Bitmap[]>() {
-//            @Override
-//            protected Bitmap[] doInBackground(Void[] objects) {
-//                Bitmap[] bitmaps;
-//                Bitmap bitmap = BitmapHelper.fetchAndRescaleBitmap(drawableID,
-//                        MAX_ART_WIDTH, MAX_ART_HEIGHT);
-//                Bitmap icon = BitmapHelper.scaleBitmap(bitmap,
-//                        MAX_ART_WIDTH_ICON, MAX_ART_HEIGHT_ICON);
-//                bitmaps = new Bitmap[]{bitmap, icon};
-//                mCache.put(String.valueOf(drawableID), bitmaps);
-//
-//                Log.d(TAG, "doInBackground: putting bitmap in cache. cache size=" +
-//                        mCache.size());
-//                return bitmaps;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Bitmap[] bitmaps) {
-//                if (bitmaps == null) {
-//                    fetchDrawableListener.onError(drawableID, new IllegalArgumentException("got null bitmaps"));
-//                } else {
-//                    fetchDrawableListener.onFetched(drawableID,
-//                            bitmaps[BIG_BITMAP_INDEX], bitmaps[ICON_BITMAP_INDEX]);
-//                }
-//            }
-//        }.execute();
+
+        new AsyncTask<Void, Void, Bitmap[]>() {
+            @Override
+            protected Bitmap[] doInBackground(Void[] objects) {
+                Bitmap[] bitmaps;
+                Bitmap bitmap = BitmapHelper.fetchAndRescaleBitmap(context, drawableID,
+                        MAX_ART_WIDTH, MAX_ART_HEIGHT);
+                Bitmap icon = BitmapHelper.scaleBitmap(bitmap,
+                        MAX_ART_WIDTH_ICON, MAX_ART_HEIGHT_ICON);
+                bitmaps = new Bitmap[]{bitmap, icon};
+                mCache.put(String.valueOf(drawableID), bitmaps);
+
+                Log.d(TAG, "doInBackground: putting bitmap in cache. cache size=" +
+                        mCache.size());
+                return bitmaps;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap[] bitmaps) {
+                if (bitmaps == null) {
+                    fetchDrawableListener.onError(drawableID, new IllegalArgumentException("got null bitmaps"));
+                } else {
+                    fetchDrawableListener.onFetched(drawableID,
+                            bitmaps[BIG_BITMAP_INDEX], bitmaps[ICON_BITMAP_INDEX]);
+                }
+            }
+        }.execute();
     }
 
     //todo try to use Glide

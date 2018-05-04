@@ -416,7 +416,8 @@ public class MediaNotificationManager extends BroadcastReceiver {
 
     private void fetchBitmapFromDrawableIdAsync(final int drawableID,
                                                 final NotificationCompat.Builder builder) {
-        AlbumArtCache.getInstance().fetch(drawableID, new AlbumArtCache.FetchDrawableListener() {
+        AlbumArtCache.getInstance().fetch(
+                mService.getApplication(), drawableID, new AlbumArtCache.FetchDrawableListener() {
             @Override
             public void onFetched(int drawableId, Bitmap bigImage, Bitmap iconImage) {
                 if (mMetadata != null &&
