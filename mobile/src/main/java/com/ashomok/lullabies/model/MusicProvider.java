@@ -46,7 +46,7 @@ import static com.ashomok.lullabies.utils.MediaIDHelper.MEDIA_ID_ROOT;
  * Simple data provider for music tracks. The actual metadata source is delegated to a
  * MusicProviderSource defined by a constructor argument of this class.
  */
-//todo move from app module to activity module
+
 @Singleton
 public class MusicProvider {
 

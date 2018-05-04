@@ -27,7 +27,7 @@ import android.text.TextUtils;
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.utils.LogHelper;
 
-import dagger.android.AndroidInjection;
+import javax.inject.Inject;
 
 /**
  * Main activity for the music player.
@@ -35,10 +35,10 @@ import dagger.android.AndroidInjection;
  * when it is created and connect/disconnect on start/stop. Thus, a MediaBrowser will be always
  * connected while this activity is running.
  */
-public class MusicPlayerActivity extends BaseActivity
+public class MainActivity extends BaseActivity
         implements MediaBrowserFragment.MediaFragmentListener {
 
-    private static final String TAG = LogHelper.makeLogTag(MusicPlayerActivity.class);
+    private static final String TAG = LogHelper.makeLogTag(MainActivity.class);
     private static final String SAVED_MEDIA_ID="com.ashomok.lullabies.MEDIA_ID";
     private static final String FRAGMENT_TAG = "uamp_list_container";
 
@@ -46,6 +46,9 @@ public class MusicPlayerActivity extends BaseActivity
         "com.ashomok.lullabies.CURRENT_MEDIA_DESCRIPTION";
 
     private Bundle mVoiceSearchParams;
+
+    @Inject
+    MusicFragment mFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,7 @@ public class MusicPlayerActivity extends BaseActivity
     public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
         LogHelper.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId());
         if (item.isPlayable()) {
-            MediaControllerCompat.getMediaController(MusicPlayerActivity.this).getTransportControls()
+            MediaControllerCompat.getMediaController(MainActivity.this).getTransportControls()
                     .playFromMediaId(item.getMediaId(), null);
         } else if (item.isBrowsable()) {
             navigateToBrowser(item.getMediaId());
@@ -156,7 +159,7 @@ public class MusicPlayerActivity extends BaseActivity
             // send it to the media session and set it to null, so it won't play again
             // when the activity is stopped/started or recreated:
             String query = mVoiceSearchParams.getString(SearchManager.QUERY);
-            MediaControllerCompat.getMediaController(MusicPlayerActivity.this).getTransportControls()
+            MediaControllerCompat.getMediaController(MainActivity.this).getTransportControls()
                     .playFromSearch(query, mVoiceSearchParams);
             mVoiceSearchParams = null;
         }

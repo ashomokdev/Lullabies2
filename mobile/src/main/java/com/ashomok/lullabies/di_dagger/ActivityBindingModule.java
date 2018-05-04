@@ -2,6 +2,8 @@ package com.ashomok.lullabies.di_dagger;
 
 
 import com.ashomok.lullabies.MusicService;
+import com.ashomok.lullabies.ui.MainActivity;
+import com.ashomok.lullabies.ui.MusicFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -16,9 +18,11 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class ActivityBindingModule {
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector (modules = MusicServiceModule.class)
     abstract MusicService musicService();
 
+    @ContributesAndroidInjector (modules = MainModule.class)
+    abstract MainActivity mainActivity();
 
 //    @ActivityScoped
 //    @ContributesAndroidInjector(modules = MainModule.class)

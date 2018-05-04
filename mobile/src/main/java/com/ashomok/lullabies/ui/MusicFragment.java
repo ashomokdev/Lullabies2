@@ -1,5 +1,6 @@
 package com.ashomok.lullabies.ui;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,21 +16,36 @@ import android.widget.ImageView;
 
 import com.ashomok.lullabies.AlbumArtCache;
 import com.ashomok.lullabies.R;
+import com.ashomok.lullabies.model.MusicProvider;
 import com.ashomok.lullabies.rate_app.RateAppAsker;
 import com.ashomok.lullabies.utils.LogHelper;
+
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import dagger.android.DaggerFragment;
+import dagger.android.support.AndroidSupportInjection;
 
 /**
  * Created by iuliia on 03.05.16.
  */
 
 //see FullScreenPlayerActivity if you want to add more components
-public class MusicFragment extends Fragment {
+public class MusicFragment extends dagger.android.support.DaggerFragment {
 
     private static final String TAG = LogHelper.makeLogTag(MusicFragment.class);
     private static final String ARGUMENT_MEDIA_ITEM = "media_item";
     private MediaBrowserCompat.MediaItem mediaItem;
     private ImageView mBackgroundImage;
     private String mCurrentArtUrl;
+
+    @Inject
+    MusicProvider musicProvider;
+
+    @Inject
+    public MusicFragment() {
+        // Required empty public constructor
+    }
 
     public MediaBrowserCompat.MediaItem getMediaItem() {
         return mediaItem;
@@ -42,6 +58,12 @@ public class MusicFragment extends Fragment {
 
         RateAppAsker.init(getActivity());
     }
+
+//    @Override
+//    public void onAttach(Context context) {
+//        AndroidSupportInjection.inject(this);
+//        super.onAttach(context);
+//    }
 
 
     static MusicFragment newInstance(MediaBrowserCompat.MediaItem mediaItem) {
@@ -67,10 +89,12 @@ public class MusicFragment extends Fragment {
     }
 
 
-//todo add dagger
     //todo what if image drawable come
     private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
-//  description.getExtras() //todo use this idea
+        if (musicProvider != null)
+        {
+
+        }
         if (description.getIconUri() == null && description.getIconBitmap() == null) {
             return; //cals every time - todo fix it
         }

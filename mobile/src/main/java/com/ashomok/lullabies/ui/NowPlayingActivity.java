@@ -16,9 +16,7 @@
 package com.ashomok.lullabies.ui;
 
 import android.app.Activity;
-import android.app.UiModeManager;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.ashomok.lullabies.utils.LogHelper;
@@ -37,7 +35,7 @@ public class NowPlayingActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogHelper.d(TAG, "onCreate");
-        Intent newIntent = new Intent(this, MusicPlayerActivity.class);
+        Intent newIntent = new Intent(this, MainActivity.class);
         startActivity(newIntent);
         finish();
     }

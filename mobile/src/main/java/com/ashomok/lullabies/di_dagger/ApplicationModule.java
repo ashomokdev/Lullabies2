@@ -32,15 +32,5 @@ public abstract class ApplicationModule {
         return context.getSharedPreferences(
                 context.getString(R.string.preferences), Context.MODE_PRIVATE);
     }
-
-    @Provides
-    static MusicProvider provideMusicProvider(Context context){
-        return new MusicProvider(context);
-    }
-
-    @Provides
-    static MusicSource provideMusicSource(Context context){
-        return new MusicSource(context);
-    }
 }
 
