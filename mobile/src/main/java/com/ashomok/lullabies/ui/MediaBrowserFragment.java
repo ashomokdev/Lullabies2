@@ -111,11 +111,6 @@ public class MediaBrowserFragment extends Fragment {
                     checkForUserVisibleErrors(children.isEmpty());
                     mBrowserAdapter.clear();
                     for (MediaBrowserCompat.MediaItem item : children) {
-                        //todo get description from mediaitem
-
-
-
-
                         mBrowserAdapter.addFragment(item);
                     }
                     mBrowserAdapter.notifyDataSetChanged();
