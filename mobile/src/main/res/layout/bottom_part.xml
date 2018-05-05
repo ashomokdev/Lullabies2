@@ -2,11 +2,46 @@
 <merge xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:showIn="@layout/music_fragment">
-    <RelativeLayout
-        android:id="@+id/bottom"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/player_waiting"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="160dp"
+        android:background="@color/colorPrimary">
 
-        <include layout="@layout/track_preview" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/fullscreen_line_color" />
+
+            <TextView
+                android:id="@+id/genre"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/fullscreen_secondary_line_color" />
+
+            <ImageView
+                android:id="@+id/decor"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/text_decor3" />
+
+        </LinearLayout>
     </RelativeLayout>
 </merge>

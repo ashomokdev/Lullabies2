@@ -74,6 +74,7 @@ public class MediaBrowserFragment extends Fragment {
     private TextView mErrorMessage;
     ClickableViewPager mPager;
     LullabiesPagerAdapter mBrowserAdapter;
+    private CircleView circleView;
 
 
     // Receive callbacks from the MediaController. Here we update our state such as which queue
@@ -114,6 +115,9 @@ public class MediaBrowserFragment extends Fragment {
                         mBrowserAdapter.addFragment(item);
                     }
                     mBrowserAdapter.notifyDataSetChanged();
+
+                    circleView.setViewPager(mPager);
+
                 } catch (Throwable t) {
                     LogHelper.e(TAG, "Error on childrenloaded", t);
                 }
@@ -148,8 +152,7 @@ public class MediaBrowserFragment extends Fragment {
 
         //init pager
         mPager = rootView.findViewById(R.id.pager);
-        mBrowserAdapter = new LullabiesPagerAdapter(
-                myContext.getSupportFragmentManager());
+        mBrowserAdapter = new LullabiesPagerAdapter(myContext.getSupportFragmentManager());
         mPager.setAdapter(mBrowserAdapter);
 
         mPager.setOnItemClickListener(new ClickableViewPager.OnItemClickListener() {
@@ -162,10 +165,9 @@ public class MediaBrowserFragment extends Fragment {
             }
         });
 
-        CircleView circleView = (CircleView) rootView.findViewById(R.id.circle_view);
-        circleView.setColorAccent(getResources().getColor(R.color.bt_accent));
-        circleView.setColorBase(getResources().getColor(R.color.cardview_dark_background));
-        circleView.setViewPager(mPager);
+        circleView = rootView.findViewById(R.id.circle_view);
+        circleView.setColorAccent(getResources().getColor(R.color.colorAccent));
+        circleView.setColorBase(getResources().getColor(R.color.colorPrimary));
 
         return rootView;
     }

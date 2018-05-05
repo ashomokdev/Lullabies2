@@ -25,13 +25,6 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/fullscreen_line_color" />
 
-        <ImageView
-            android:id="@+id/decor"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/text_decor3" />
-
         <TextView
             android:id="@+id/genre"
             android:layout_width="fill_parent"

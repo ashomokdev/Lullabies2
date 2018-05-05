@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ashomok.lullabies.AlbumArtCache;
 import com.ashomok.lullabies.R;
@@ -41,6 +42,8 @@ public class MusicFragment extends DaggerFragment {
     private ImageView mBackgroundImage;
     private String mCurrentArtUrl;
     private int mCurrentDrawableID;
+    private TextView textViewName;
+    private TextView textViewGenre;
 
     @Inject
     MusicProvider musicProvider;
@@ -81,8 +84,22 @@ public class MusicFragment extends DaggerFragment {
 
         View view = inflater.inflate(R.layout.music_fragment, null);
         mBackgroundImage = view.findViewById(R.id.image);
-        fetchImageAsync(mediaItem.getDescription());
+        MediaDescriptionCompat mediaItemDescription = mediaItem.getDescription();
+        fetchImageAsync(mediaItemDescription);
+
+        textViewName = view.findViewById(R.id.name);
+        textViewGenre = view.findViewById(R.id.genre);
+        updateTrackPreview(mediaItemDescription);
         return view;
+    }
+
+    private void updateTrackPreview(MediaDescriptionCompat description) {
+
+        CharSequence name = description.getTitle();
+        CharSequence category = description.getSubtitle();
+
+        textViewName.setText(name);
+        textViewGenre.setText(category);
     }
 
     private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {

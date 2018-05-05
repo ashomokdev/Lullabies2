@@ -27,11 +27,6 @@ import android.text.TextUtils;
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.utils.LogHelper;
 
-import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
-import dagger.android.support.AndroidSupportInjection;
-
 /**
  * Main activity for the music player.
  * This class hold the MediaBrowser and the MediaController instances. It will create a MediaBrowser
@@ -58,7 +53,7 @@ public class MainActivity extends BaseActivity
 
         LogHelper.d(TAG, "Activity onCreate");
 
-        setContentView(R.layout.activity_player);
+        setContentView(R.layout.activity_main);
 
         initializeFromParams(savedInstanceState, getIntent());
     }
