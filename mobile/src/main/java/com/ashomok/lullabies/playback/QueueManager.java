@@ -205,8 +205,8 @@ public class QueueManager {
                     (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID) != 0) {
                 Uri iconUri = metadata.getDescription().getIconUri();
                 if (iconUri == null) {
-                    int image = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID);
-                    AlbumArtCache.getInstance().fetch(context, image, new AlbumArtCache.FetchDrawableListener() {
+                    int drawableId = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID);
+                    AlbumArtCache.getInstance().fetch(context, drawableId, new AlbumArtCache.FetchDrawableListener() {
                         @Override
                         public void onFetched(int drawableID, Bitmap bitmap, Bitmap icon) {
                             mMusicProvider.updateMusicArt(musicId, bitmap, icon);

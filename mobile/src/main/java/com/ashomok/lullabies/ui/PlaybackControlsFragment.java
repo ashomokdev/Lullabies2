@@ -167,26 +167,7 @@ public class PlaybackControlsFragment extends Fragment {
         } else {
             int drawableID = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID);
             if (drawableID != 0) {
-                // async fetch the album art icon
-                Bitmap art = cache.getBigImage(drawableID);
-
-                if (art != null) {
-                    mAlbumArt.setImageBitmap(art);
-                } else {
-                    cache.fetch(getActivity(), drawableID, new AlbumArtCache.FetchDrawableListener() {
-                                @Override
-                                public void onFetched(int drawableId, Bitmap bitmap, Bitmap icon) {
-                                    if (icon != null) {
-                                        LogHelper.d(TAG, "album art icon of w=", icon.getWidth(),
-                                                " h=", icon.getHeight());
-                                        if (isAdded()) {
-                                            mAlbumArt.setImageBitmap(icon);
-                                        }
-                                    }
-                                }
-                            }
-                    );
-                }
+                mAlbumArt.setImageDrawable(getActivity().getResources().getDrawable(drawableID));
             }
         }
     }

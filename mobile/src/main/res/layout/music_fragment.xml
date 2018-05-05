@@ -8,6 +8,8 @@
         android:id="@+id/image"
         style="@style/music_fragment_central_img"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@color/background_gradient_end"/>
+        android:layout_height="match_parent" />
+
+    <include layout="@layout/bottom_part"
+        android:id="@+id/bottom"/>
 </RelativeLayout>

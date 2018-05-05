@@ -127,25 +127,7 @@ public class MusicFragment extends DaggerFragment {
             int drawableID = (int) mMetadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID);
             if (drawableID != 0) {
                 mCurrentDrawableID = drawableID;
-                // async fetch the album art icon
-                Bitmap art = AlbumArtCache.getInstance().getBigImage(drawableID);
-
-                if (art != null) {
-                    // if we have the art cached or from the MediaDescription, use it:
-                    mBackgroundImage.setImageBitmap(art);
-                } else {
-                    // otherwise, fetch a high res version and update:
-                    cache.fetch(getContext(), drawableID, new AlbumArtCache.FetchDrawableListener() {
-                        @Override
-                        public void onFetched(int drawableId, Bitmap bitmap, Bitmap iconImage) {
-                            // sanity check, in case a new fetch request has been done while
-                            // the previous hasn't yet returned:
-                            if (mCurrentDrawableID == drawableId) {
-                                mBackgroundImage.setImageBitmap(bitmap);
-                            }
-                        }
-                    });
-                }
+                mBackgroundImage.setImageDrawable(getResources().getDrawable(drawableID));
             }
         }
     }
