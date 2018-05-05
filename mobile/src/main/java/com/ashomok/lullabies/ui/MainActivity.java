@@ -29,6 +29,9 @@ import com.ashomok.lullabies.utils.LogHelper;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjection;
+import dagger.android.support.AndroidSupportInjection;
+
 /**
  * Main activity for the music player.
  * This class hold the MediaBrowser and the MediaController instances. It will create a MediaBrowser
@@ -47,12 +50,10 @@ public class MainActivity extends BaseActivity
 
     private Bundle mVoiceSearchParams;
 
-//    @Inject
-//    MusicFragment mFragment;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-//        AndroidInjection.inject(this);//todo reduntant
         super.onCreate(savedInstanceState);
 
         LogHelper.d(TAG, "Activity onCreate");

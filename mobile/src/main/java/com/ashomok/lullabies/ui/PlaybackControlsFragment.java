@@ -18,6 +18,7 @@ package com.ashomok.lullabies.ui;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +38,8 @@ import com.ashomok.lullabies.AlbumArtCache;
 import com.ashomok.lullabies.MusicService;
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.utils.LogHelper;
+
+import static com.ashomok.lullabies.model.MusicProviderSource.CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID;
 
 /**
  * A class that shows the Media Queue to the user.
@@ -135,29 +138,55 @@ public class PlaybackControlsFragment extends Fragment {
         if (metadata.getDescription().getIconUri() != null) {
             artUrl = metadata.getDescription().getIconUri().toString();
         }
-        if (!TextUtils.equals(artUrl, mArtUrl)) {
-            mArtUrl = artUrl;
-            Bitmap art = metadata.getDescription().getIconBitmap();
-            AlbumArtCache cache = AlbumArtCache.getInstance();
-            if (art == null) {
-                art = cache.getIconImage(mArtUrl);
-            }
-            if (art != null) {
-                mAlbumArt.setImageBitmap(art);
-            } else {
-                cache.fetch(artUrl, new AlbumArtCache.FetchUrlListener() { //todo error may be here no url image - use drawable - add code
-                            @Override
-                            public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
-                                if (icon != null) {
-                                    LogHelper.d(TAG, "album art icon of w=", icon.getWidth(),
-                                            " h=", icon.getHeight());
-                                    if (isAdded()) {
-                                        mAlbumArt.setImageBitmap(icon);
+        AlbumArtCache cache = AlbumArtCache.getInstance();
+        if (artUrl != null) {
+            if (!TextUtils.equals(artUrl, mArtUrl)) {
+                mArtUrl = artUrl;
+                Bitmap art = metadata.getDescription().getIconBitmap();
+                if (art == null) {
+                    art = cache.getIconImage(mArtUrl);
+                }
+                if (art != null) {
+                    mAlbumArt.setImageBitmap(art);
+                } else {
+                    cache.fetch(artUrl, new AlbumArtCache.FetchUrlListener() {
+                                @Override
+                                public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
+                                    if (icon != null) {
+                                        LogHelper.d(TAG, "album art icon of w=", icon.getWidth(),
+                                                " h=", icon.getHeight());
+                                        if (isAdded()) {
+                                            mAlbumArt.setImageBitmap(icon);
+                                        }
                                     }
                                 }
                             }
-                        }
-                );
+                    );
+                }
+            }
+        } else {
+            int drawableID = (int) metadata.getLong(CUSTOM_METADATA_TRACK_IMAGE_DRAWABLE_ID);
+            if (drawableID != 0) {
+                // async fetch the album art icon
+                Bitmap art = cache.getBigImage(drawableID);
+
+                if (art != null) {
+                    mAlbumArt.setImageBitmap(art);
+                } else {
+                    cache.fetch(getActivity(), drawableID, new AlbumArtCache.FetchDrawableListener() {
+                                @Override
+                                public void onFetched(int drawableId, Bitmap bitmap, Bitmap icon) {
+                                    if (icon != null) {
+                                        LogHelper.d(TAG, "album art icon of w=", icon.getWidth(),
+                                                " h=", icon.getHeight());
+                                        if (isAdded()) {
+                                            mAlbumArt.setImageBitmap(icon);
+                                        }
+                                    }
+                                }
+                            }
+                    );
+                }
             }
         }
     }
