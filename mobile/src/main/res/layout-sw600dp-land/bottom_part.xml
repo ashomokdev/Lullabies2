@@ -38,6 +38,13 @@
                 android:maxLines="1"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/fullscreen_secondary_line_color" />
+
+            <ImageView
+                android:id="@+id/decor"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/text_decor3" />
         </LinearLayout>
     </RelativeLayout>
 </merge>

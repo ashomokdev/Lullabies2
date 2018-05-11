@@ -48,11 +48,10 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@id/playback_error">
 
-        <com.ashomok.lullabies.utils.ClickableViewPager
+        <com.ashomok.lullabies.tools.ClickableViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white" />
+            android:layout_height="match_parent" />
 
         <com.ashomok.lullabies.tools.CircleView
             android:id="@+id/circle_view"
@@ -62,5 +61,11 @@
             android:layout_marginBottom="200dp"
             android:layout_centerHorizontal="true"/>
 
+        <com.ashomok.lullabies.tools.TapMeAnimatedImageView
+            android:id="@+id/tap_me_btn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:padding="20dp"
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 </RelativeLayout>

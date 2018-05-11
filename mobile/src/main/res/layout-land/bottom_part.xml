@@ -32,6 +32,13 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 />
+
+            <ImageView
+                android:id="@+id/decor"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/text_decor3" />
         </LinearLayout>
     </RelativeLayout>
 </merge>
