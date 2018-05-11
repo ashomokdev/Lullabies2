@@ -22,10 +22,19 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.ViewGroup;
 
 import com.ashomok.lullabies.R;
+import com.ashomok.lullabies.Settings;
+import com.ashomok.lullabies.ad.AdMobContainerImpl;
 import com.ashomok.lullabies.utils.LogHelper;
+
+import javax.inject.Inject;
 
 /**
  * Main activity for the music player.
@@ -45,7 +54,10 @@ public class MainActivity extends BaseActivity
 
     private Bundle mVoiceSearchParams;
 
+    //todo inject presenter
 
+    @Inject
+    AdMobContainerImpl adMobContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +68,25 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
 
         initializeFromParams(savedInstanceState, getIntent());
+
+        setUpToolbar();
+
+        showAds();
+    }
+
+    private void setUpToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        menu.findItem(R.id.remove_ads).setVisible(Settings.isAdsActive);
+
+        return true;
     }
 
     @Override
@@ -160,5 +191,13 @@ public class MainActivity extends BaseActivity
             mVoiceSearchParams = null;
         }
         getBrowseFragment().onConnected();
+    }
+
+    public void showAds() {
+        showBannerAd();
+    }
+
+    private void showBannerAd() {
+        adMobContainer.initBottomBannerAd((ViewGroup) findViewById(R.id.ads_container));
     }
 }
