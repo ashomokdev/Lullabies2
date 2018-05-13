@@ -88,4 +88,8 @@
     <string name="error_no_skus">We didn\\\'t find any SKUs to display</string>
     <string name="error_billing_unavailable">Billing unavailable</string>
     <string name="unknown_error">An unknown error occurred</string>
+    <string name="cancel">Cancel</string>
+    <string name="buy_ads_free">Buy ads free</string>
+    <string name="ads_free_forever">Ads free forever</string>
+    <string name="no_internet_connection">No internet connection</string>
 </resources>

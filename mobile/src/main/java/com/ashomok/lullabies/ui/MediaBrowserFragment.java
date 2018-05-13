@@ -36,6 +36,7 @@ import com.ashomok.lullabies.MusicService;
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.tools.CircleView;
 import com.ashomok.lullabies.tools.ClickableViewPager;
+import com.ashomok.lullabies.ui.main.LullabiesPagerAdapter;
 import com.ashomok.lullabies.utils.LogHelper;
 import com.ashomok.lullabies.utils.MediaIDHelper;
 import com.ashomok.lullabies.utils.NetworkHelper;

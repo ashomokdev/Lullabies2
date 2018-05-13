@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.Settings;
-import com.ashomok.lullabies.ui.MusicFragment;
+import com.ashomok.lullabies.ui.main.MusicFragment;
 
 import dagger.Module;
 import dagger.Provides;

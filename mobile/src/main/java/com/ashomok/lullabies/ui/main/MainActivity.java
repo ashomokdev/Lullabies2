@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ashomok.lullabies.ui;
+package com.ashomok.lullabies.ui.main;
 
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
@@ -22,16 +22,22 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.Settings;
 import com.ashomok.lullabies.ad.AdMobContainerImpl;
+import com.ashomok.lullabies.billing.model.SkuRowData;
+import com.ashomok.lullabies.ui.BaseActivity;
+import com.ashomok.lullabies.ui.MediaBrowserFragment;
+import com.ashomok.lullabies.ui.main.RemoveAdDialogFragment;
 import com.ashomok.lullabies.utils.LogHelper;
 
 import javax.inject.Inject;
@@ -43,7 +49,7 @@ import javax.inject.Inject;
  * connected while this activity is running.
  */
 public class MainActivity extends BaseActivity
-        implements MediaBrowserFragment.MediaFragmentListener {
+        implements MediaBrowserFragment.MediaFragmentListener, MainContract.View {
 
     private static final String TAG = LogHelper.makeLogTag(MainActivity.class);
     private static final String SAVED_MEDIA_ID="com.ashomok.lullabies.MEDIA_ID";
@@ -54,10 +60,11 @@ public class MainActivity extends BaseActivity
 
     private Bundle mVoiceSearchParams;
 
-    //todo inject presenter
-
     @Inject
     AdMobContainerImpl adMobContainer;
+
+    @Inject
+    MainPresenter mPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +79,8 @@ public class MainActivity extends BaseActivity
         setUpToolbar();
 
         showAds();
+
+        mPresenter.takeView(this);
     }
 
     private void setUpToolbar() {
@@ -87,6 +96,29 @@ public class MainActivity extends BaseActivity
         menu.findItem(R.id.remove_ads).setVisible(Settings.isAdsActive);
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.remove_ads:
+                proposeRemoveAds();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void proposeRemoveAds() {
+        String price = getRemoveAdPrice();
+        RemoveAdDialogFragment removeAdDialogFragment =
+                RemoveAdDialogFragment.newInstance(price);
+
+        removeAdDialogFragment.show(getFragmentManager(), "dialog");
+    }
+
+    private String getRemoveAdPrice() {
+
+        return "2 uah";
     }
 
     @Override
@@ -199,5 +231,30 @@ public class MainActivity extends BaseActivity
 
     private void showBannerAd() {
         adMobContainer.initBottomBannerAd((ViewGroup) findViewById(R.id.ads_container));
+    }
+
+    @Override
+    public void showError(int errorMessageRes) {
+
+    }
+
+    @Override
+    public void showInfo(int infoMessageRes) {
+
+    }
+
+    @Override
+    public void updateView(boolean isAdsActive) {
+
+    }
+
+    @Override
+    public void initRemoveAdsRow(SkuRowData item) {
+
+    }
+
+    @Override
+    public void showInfo(String message) {
+
     }
 }

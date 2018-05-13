@@ -1,4 +1,4 @@
-package com.ashomok.lullabies.ui;
+package com.ashomok.lullabies.ui.main;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
