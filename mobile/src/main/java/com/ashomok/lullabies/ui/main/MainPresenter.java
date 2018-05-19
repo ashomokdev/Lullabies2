@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.ashomok.lullabies.R;
+import com.ashomok.lullabies.Settings;
 import com.ashomok.lullabies.billing.BillingProviderCallback;
 import com.ashomok.lullabies.billing.BillingProviderImpl;
 import com.ashomok.lullabies.billing.model.SkuRowData;
@@ -32,12 +33,14 @@ public class MainPresenter implements MainContract.Presenter {
     @Inject
     Context context;
 
+    private SkuRowData removeAdsSkuRow;
+
     private BillingProviderCallback billingProviderCallback = new BillingProviderCallback() {
         @Override
         public void onPurchasesUpdated() {
             if (view != null) {
-                boolean isAdsActive = !billingProvider.isAdsFreeForever();
-                view.updateView(isAdsActive);
+                Settings.isAdsActive = !billingProvider.isAdsFreeForever();
+                view.updateView(Settings.isAdsActive);
             }
         }
 
@@ -73,20 +76,17 @@ public class MainPresenter implements MainContract.Presenter {
      */
     private void updateSkuRows(List<SkuRowData> skuRowData) {
         if (view != null) {
-            if (skuRowData.size() == 2) {
-                for (SkuRowData item : skuRowData) {
-                    switch (item.getSku()) {
-                        case ADS_FREE_FOREVER_SKU_ID:
-                            view.initRemoveAdsRow(item);
-                            break;
-                        default:
-                            break;
-                    }
+            for (SkuRowData item : skuRowData) {
+                switch (item.getSku()) {
+                    case ADS_FREE_FOREVER_SKU_ID:
+                        removeAdsSkuRow = item;
+                        break;
+                    default:
+                        break;
                 }
             }
         }
     }
-
 
     @Override
     public void takeView(MainContract.View activity) {
@@ -123,11 +123,22 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void onRemoveAdsClicked(SkuRowData data) {
-        if (data != null) {
-            billingProvider.getBillingManager().initiatePurchaseFlow(data.getSku(),
-                    data.getSkuType());
+    public void onRemoveAdsClicked() {
+        if (removeAdsSkuRow != null) {
+            billingProvider.getBillingManager().initiatePurchaseFlow(removeAdsSkuRow.getSku(),
+                    removeAdsSkuRow.getSkuType());
 
+        }
+    }
+
+    @Override
+    public void proposeRemoveAds() {
+        if (view != null) {
+            checkConnection();
+            if (removeAdsSkuRow != null) {
+                view.showRemoveAdDialog(removeAdsSkuRow);
+
+            }
         }
     }
 }

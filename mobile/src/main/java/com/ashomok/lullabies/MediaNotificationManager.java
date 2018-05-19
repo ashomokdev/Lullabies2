@@ -39,7 +39,7 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import com.ashomok.lullabies.ui.MainActivity;
+import com.ashomok.lullabies.ui.main.MainActivity;
 import com.ashomok.lullabies.utils.LogHelper;
 import com.ashomok.lullabies.utils.ResourceHelper;
 

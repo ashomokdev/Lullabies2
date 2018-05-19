@@ -3,6 +3,7 @@ package com.ashomok.lullabies.ad;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,6 +23,7 @@ public class AdMobContainerImpl implements AdContainer {
     private static final String TAG = LogHelper.makeLogTag(AdMobContainerImpl.class);
     private final Context context;
     private final int adid;
+    private ViewGroup bannerParent;
 
     @Inject
     public AdMobContainerImpl(Context context, @StringRes int adid) {
@@ -73,10 +75,16 @@ public class AdMobContainerImpl implements AdContainer {
      */
     @Override
     public void initBottomBannerAd(ViewGroup parentLayout) {
+        this.bannerParent = parentLayout;
         if (context.getResources().getConfiguration().orientation ==
                 android.content.res.Configuration.ORIENTATION_PORTRAIT) {
             //init banner
             addBottomBanner(parentLayout);
         }
+    }
+
+    @Override
+    public void showAd(boolean isAdsActive) {
+        bannerParent.setVisibility(isAdsActive ? View.VISIBLE : View.GONE);
     }
 }

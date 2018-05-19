@@ -22,14 +22,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.View;
 
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.Settings;
@@ -37,7 +35,7 @@ import com.ashomok.lullabies.ad.AdMobContainerImpl;
 import com.ashomok.lullabies.billing.model.SkuRowData;
 import com.ashomok.lullabies.ui.BaseActivity;
 import com.ashomok.lullabies.ui.MediaBrowserFragment;
-import com.ashomok.lullabies.ui.main.RemoveAdDialogFragment;
+import com.ashomok.lullabies.utils.InfoSnackbarUtil;
 import com.ashomok.lullabies.utils.LogHelper;
 
 import javax.inject.Inject;
@@ -52,11 +50,11 @@ public class MainActivity extends BaseActivity
         implements MediaBrowserFragment.MediaFragmentListener, MainContract.View {
 
     private static final String TAG = LogHelper.makeLogTag(MainActivity.class);
-    private static final String SAVED_MEDIA_ID="com.ashomok.lullabies.MEDIA_ID";
+    private static final String SAVED_MEDIA_ID = "com.ashomok.lullabies.MEDIA_ID";
     private static final String FRAGMENT_TAG = "uamp_list_container";
 
     public static final String EXTRA_CURRENT_MEDIA_DESCRIPTION =
-        "com.ashomok.lullabies.CURRENT_MEDIA_DESCRIPTION";
+            "com.ashomok.lullabies.CURRENT_MEDIA_DESCRIPTION";
 
     private Bundle mVoiceSearchParams;
 
@@ -66,20 +64,21 @@ public class MainActivity extends BaseActivity
     @Inject
     MainPresenter mPresenter;
 
+    private View mRootView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        LogHelper.d(TAG, "Activity onCreate");
-
         setContentView(R.layout.activity_main);
 
+        mRootView = findViewById(android.R.id.content);
+        if (mRootView == null) {
+            mRootView = getWindow().getDecorView().findViewById(android.R.id.content);
+        }
+
         initializeFromParams(savedInstanceState, getIntent());
-
         setUpToolbar();
-
         showAds();
-
         mPresenter.takeView(this);
     }
 
@@ -102,23 +101,10 @@ public class MainActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.remove_ads:
-                proposeRemoveAds();
+                mPresenter.proposeRemoveAds();
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void proposeRemoveAds() {
-        String price = getRemoveAdPrice();
-        RemoveAdDialogFragment removeAdDialogFragment =
-                RemoveAdDialogFragment.newInstance(price);
-
-        removeAdDialogFragment.show(getFragmentManager(), "dialog");
-    }
-
-    private String getRemoveAdPrice() {
-
-        return "2 uah";
     }
 
     @Override
@@ -165,10 +151,10 @@ public class MainActivity extends BaseActivity
         // (which contain the query details) in a parameter, so we can reuse it later, when the
         // MediaSession is connected.
         if (intent.getAction() != null
-            && intent.getAction().equals(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)) {
+                && intent.getAction().equals(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)) {
             mVoiceSearchParams = intent.getExtras();
             LogHelper.d(TAG, "Starting from voice search query=",
-                mVoiceSearchParams.getString(SearchManager.QUERY));
+                    mVoiceSearchParams.getString(SearchManager.QUERY));
         } else {
             if (savedInstanceState != null) {
                 // If there is a saved media ID, use it
@@ -187,8 +173,8 @@ public class MainActivity extends BaseActivity
             fragment.setMediaId(mediaId);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.setCustomAnimations(
-                R.animator.slide_in_from_right, R.animator.slide_out_to_left,
-                R.animator.slide_in_from_left, R.animator.slide_out_to_right);
+                    R.animator.slide_in_from_right, R.animator.slide_out_to_left,
+                    R.animator.slide_in_from_left, R.animator.slide_out_to_right);
             transaction.replace(R.id.container, fragment, FRAGMENT_TAG);
             // If this is not the top level media (root), we add it to the fragment back stack,
             // so that actionbar toggle and Back will work appropriately:
@@ -230,31 +216,35 @@ public class MainActivity extends BaseActivity
     }
 
     private void showBannerAd() {
-        adMobContainer.initBottomBannerAd((ViewGroup) findViewById(R.id.ads_container));
+        adMobContainer.initBottomBannerAd(findViewById(R.id.ads_container));
     }
 
     @Override
     public void showError(int errorMessageRes) {
-
+        InfoSnackbarUtil.showError(errorMessageRes, mRootView);
     }
 
     @Override
     public void showInfo(int infoMessageRes) {
-
-    }
-
-    @Override
-    public void updateView(boolean isAdsActive) {
-
-    }
-
-    @Override
-    public void initRemoveAdsRow(SkuRowData item) {
-
+        InfoSnackbarUtil.showInfo(infoMessageRes, mRootView);
     }
 
     @Override
     public void showInfo(String message) {
+        InfoSnackbarUtil.showInfo(message, mRootView);
+    }
 
+    @Override
+    public void showRemoveAdDialog(SkuRowData data) {
+
+        RemoveAdDialogFragment removeAdDialogFragment =
+                RemoveAdDialogFragment.newInstance(data.getPrice());
+
+        removeAdDialogFragment.show(getFragmentManager(), "dialog");
+    }
+
+    @Override
+    public void updateView(boolean isAdsActive) {
+        adMobContainer.showAd(isAdsActive);
     }
 }

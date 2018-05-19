@@ -7,4 +7,6 @@ import android.view.ViewGroup;
  */
 public interface AdContainer  {
     void initBottomBannerAd(ViewGroup parentLayout);
+
+    void showAd(boolean isAdsActive);
 }

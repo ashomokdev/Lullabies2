@@ -2,8 +2,8 @@ package com.ashomok.lullabies.di_dagger;
 
 
 import com.ashomok.lullabies.MusicService;
-import com.ashomok.lullabies.ui.MainActivity;
-import com.ashomok.lullabies.ui.MusicFragment;
+import com.ashomok.lullabies.ui.main.MainActivity;
+import com.ashomok.lullabies.ui.main.MusicFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

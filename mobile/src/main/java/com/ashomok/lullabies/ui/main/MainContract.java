@@ -19,14 +19,16 @@ public interface MainContract {
 
         void showInfo (@StringRes int infoMessageRes);
 
-        void updateView(boolean isAdsActive);
+        void showRemoveAdDialog(SkuRowData data);
 
-        void initRemoveAdsRow(SkuRowData item);
+        void updateView(boolean isAdsActive);
 
         void showInfo(String message);
     }
 
     interface Presenter extends BasePresenter<View> {
-        void onRemoveAdsClicked(SkuRowData item);
+        void onRemoveAdsClicked();
+
+        void proposeRemoveAds();
     }
 }

@@ -61,10 +61,14 @@ public class RemoveAdDialogFragment extends DialogFragment {
     }
 
     private void onCancelClicked() {
-       dismiss();
+        dismiss();
     }
 
     private void onBuyClicked() {
-        //todo
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+           activity.mPresenter.onRemoveAdsClicked();
+        }
+        dismiss();
     }
 }

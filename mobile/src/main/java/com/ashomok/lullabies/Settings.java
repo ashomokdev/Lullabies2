@@ -14,7 +14,6 @@ public class Settings {
     public static boolean isTestMode = true; //todo undo in prod
 
     public static boolean isAdsActive = true; //will be set in MainActivity
-    public static boolean isPremium = false;//will be set in MainActivity
 
     /* BASE_64_ENCODED_PUBLIC_KEY should be YOUR APPLICATION'S PUBLIC KEY
      * (that you got from the Google Play developer console). This is not your

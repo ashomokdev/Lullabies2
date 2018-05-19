@@ -1,9 +1,11 @@
 package com.ashomok.lullabies.di_dagger;
 
+import android.app.Activity;
 import android.support.annotation.StringRes;
 
 import com.ashomok.lullabies.R;
 import com.ashomok.lullabies.Settings;
+import com.ashomok.lullabies.ui.main.MainActivity;
 import com.ashomok.lullabies.ui.main.MusicFragment;
 
 import dagger.Module;
@@ -28,5 +30,10 @@ public abstract class MainModule {
         } else {
             return R.string.main_activity_banner;
         }
+    }
+
+    @Provides
+    static Activity provideActivity(MainActivity activity) {
+        return activity;
     }
 }
