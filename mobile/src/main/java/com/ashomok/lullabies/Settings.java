@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 
 public class Settings {
 
-    public static boolean isTestMode = true; //todo undo in prod
+    public static boolean isTestMode = false; //todo undo in prod
 
     public static boolean isAdsActive = true; //will be set in MainActivity
 

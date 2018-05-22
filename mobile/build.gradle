@@ -23,7 +23,7 @@ android {
         applicationId "com.ashomok.lullabies"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 11
+        versionCode 13
         versionName "3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

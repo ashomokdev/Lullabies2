@@ -56,7 +56,7 @@ public abstract class BaseActivity extends ActionBarCastActivity implements Medi
             // of the TaskDescription.
             ActivityManager.TaskDescription taskDesc = new ActivityManager.TaskDescription(
                     getTitle().toString(),
-                    BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white),
+                    BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher),
                     ResourceHelper.getThemeColor(this, R.attr.colorPrimary,
                             android.R.color.darker_gray));
             setTaskDescription(taskDesc);

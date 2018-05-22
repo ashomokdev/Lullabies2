@@ -50,6 +50,7 @@ public class MusicFragment extends DaggerFragment {
 
     @Inject
     public MusicFragment() {
+        Log.d(TAG, "empty constructor called");
         // Required empty public constructor
     }
 
@@ -59,6 +60,7 @@ public class MusicFragment extends DaggerFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
         mediaItem = getArguments().getParcelable(ARGUMENT_MEDIA_ITEM);
 
@@ -84,11 +86,11 @@ public class MusicFragment extends DaggerFragment {
 
         View view = inflater.inflate(R.layout.music_fragment, null);
         mBackgroundImage = view.findViewById(R.id.image);
-        MediaDescriptionCompat mediaItemDescription = mediaItem.getDescription();
-        fetchImageAsync(mediaItemDescription);
+        fetchImageAsync();
 
         textViewName = view.findViewById(R.id.name);
         textViewGenre = view.findViewById(R.id.genre);
+        MediaDescriptionCompat mediaItemDescription = mediaItem.getDescription();
         updateTrackPreview(mediaItemDescription);
         return view;
     }
@@ -102,13 +104,8 @@ public class MusicFragment extends DaggerFragment {
         textViewGenre.setText(category);
     }
 
-    private void fetchImageAsync(@NonNull MediaDescriptionCompat description) {
-        AlbumArtCache cache = AlbumArtCache.getInstance();
-        if (description.getIconUri() == null) {
-            fetchImageFromDrawable(description, cache);
-        } else {
-            fetchImageFromUri(description, cache);
-        }
+    private void fetchImageAsync() {
+        fetchImageFromDrawable();
     }
 
     private void fetchImageFromUri(@NonNull MediaDescriptionCompat description, AlbumArtCache cache) {
@@ -137,7 +134,7 @@ public class MusicFragment extends DaggerFragment {
         }
     }
 
-    private void fetchImageFromDrawable(@NonNull MediaDescriptionCompat description, AlbumArtCache cache) {
+    private void fetchImageFromDrawable() {
         if (musicProvider != null) {
             MediaMetadataCompat mMetadata =
                     musicProvider.getMusic(MediaIDHelper.extractMusicIDFromMediaID(mediaItem.getMediaId()));

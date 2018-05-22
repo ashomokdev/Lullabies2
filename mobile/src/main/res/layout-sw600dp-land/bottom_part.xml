@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:showIn="@layout/music_fragment">
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/player_waiting"
         android:layout_width="wrap_content"
         android:layout_height="160dp"
         android:layout_alignParentBottom="true"
@@ -40,11 +39,10 @@
                 android:textColor="@color/fullscreen_secondary_line_color" />
 
             <ImageView
-                android:id="@+id/decor"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/text_decor3" />
+                android:src="@drawable/text_decor" />
         </LinearLayout>
     </RelativeLayout>
 </merge>

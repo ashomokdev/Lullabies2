@@ -46,6 +46,8 @@ import javax.inject.Inject;
  * when it is created and connect/disconnect on start/stop. Thus, a MediaBrowser will be always
  * connected while this activity is running.
  */
+
+//todo bug when rotated - save state first
 public class MainActivity extends BaseActivity
         implements MediaBrowserFragment.MediaFragmentListener, MainContract.View {
 

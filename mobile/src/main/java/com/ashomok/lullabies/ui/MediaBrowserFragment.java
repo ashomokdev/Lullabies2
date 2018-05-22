@@ -109,7 +109,7 @@ public class MediaBrowserFragment extends Fragment {
                     circleView.setViewPager(mPager);
 
                 } catch (Throwable t) {
-                    LogHelper.e(TAG, "Error on childrenloaded", t);
+                    LogHelper.e(TAG, "Error on children loaded", t);
                 }
             }
 
@@ -146,17 +146,14 @@ public class MediaBrowserFragment extends Fragment {
         mBrowserAdapter = new LullabiesPagerAdapter(myContext.getSupportFragmentManager());
         mPager.setAdapter(mBrowserAdapter);
 
-        mPager.setOnItemClickListener(new ClickableViewPager.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Log.d(TAG, "onPageClicked, position " + position);
-                checkForUserVisibleErrors(false);
+        mPager.setOnItemClickListener(position -> {
+            Log.d(TAG, "onPageClicked, position " + position);
+            checkForUserVisibleErrors(false);
 
-                tapMeImage.setVisibility(View.GONE);
+            tapMeImage.setVisibility(View.GONE);
 
-                MediaBrowserCompat.MediaItem item = mBrowserAdapter.getItem(position).getMediaItem();
-                mMediaFragmentListener.onMediaItemSelected(item);
-            }
+            MediaBrowserCompat.MediaItem item = mBrowserAdapter.getItem(position).getMediaItem();
+            mMediaFragmentListener.onMediaItemSelected(item);
         });
 
         circleView = rootView.findViewById(R.id.circle_view);
