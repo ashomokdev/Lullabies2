@@ -48,7 +48,7 @@ public class AdMobContainerImpl implements AdContainer {
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
                 lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 adView.setLayoutParams(lp);
-            } else if (parent instanceof LinearLayout) {
+            } else {
                 adView.setLayoutParams(
                         new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT,
